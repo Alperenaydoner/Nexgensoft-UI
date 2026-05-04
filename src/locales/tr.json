@@ -1,0 +1,126 @@
+{
+  "nav": {
+    "home": "Ana Sayfa",
+    "services": "Hizmetler",
+    "about": "Hakkımızda",
+    "contact": "İletişim",
+    "getInTouch": "İletişime geç",
+    "application": "Başvuru"
+  },
+  "lang": {
+    "tr": "Türkçe",
+    "en": "English"
+  },
+  "footer": {
+    "rights": "Tüm hakları saklıdır.",
+    "impactLine": "İyi yazılım sadece çalışmaz, büyütür.",
+    "impactSub": "Çalışan bir yazılım standarttır; büyüten bir yazılım stratejidir. Altyapınızı bugünün yüküne değil, yarının trafiğine göre kuruyoruz."
+  },
+  "home": {
+    "badge": "Şu an yeni projeler kabul ediyoruz",
+    "heroPrefix": "İşletmenizi ileri taşıyan ",
+    "heroAccent": "yazılımı",
+    "heroSuffix": " birlikte kuruyoruz.",
+    "heroSubtitle": "Kurumsal düzeyde özel yazılım, bulut ve dijital dönüşüm: sektöründe öncü olmak isteyen şirketler için uçtan uca, güvenilir çözümler.",
+    "ctaExplore": "Hizmetleri keşfet →",
+    "ctaStart": "Proje başlat",
+    "ctaPrecheck": "Ücretsiz teknik ön analiz talep et",
+    "statsAria": "Öne çıkan metrikler",
+    "stats": [
+      { "value": "500+", "label": "Teslim edilen proje" },
+      { "value": "98%", "label": "Müşteri memnuniyeti" },
+      { "value": "50+", "label": "Hizmet verilen ülke" },
+      { "value": "7/24", "label": "Destek hattı" }
+    ]
+  },
+  "services": {
+    "pageTitle": "İşinizi büyüten teknoloji çözümleri",
+    "pageIntro": "İhtiyacınıza özel, sürdürülebilir ve ölçeklenebilir yazılım çözümleri geliştiriyoruz.",
+    "items": [
+      {
+        "title": "API & Entegrasyon",
+        "body": "Mevcut sistemlerinizi tek bir çatı altında topluyor, hızlı ve güvenilir veri akışı sağlıyoruz. Yüksek trafikte Redis, SQL optimizasyonu ve kuyruk yönetimiyle anlık işlem kapasitesi ve sağlam bir veri katmanı kurarız."
+      },
+      {
+        "title": "Web & Mobil Geliştirme",
+        "body": "Modern teknolojilerle hızlı, güvenli ve kullanıcı dostu uygulamalar geliştiriyoruz."
+      },
+      {
+        "title": "Bulut & DevOps",
+        "body": "Altyapınızı buluta taşıyor, performans ve maliyet optimizasyonu sağlıyoruz."
+      },
+      {
+        "title": "Danışmanlık",
+        "body": "Teknik kararlarınızı doğru almanız için analiz, mimari ve süreç danışmanlığı sunuyoruz."
+      }
+    ]
+  },
+  "about": {
+    "headline": "Biz sadece yazılım üretmiyoruz, işinizi büyütüyoruz.",
+    "paras": [
+      "Nexgensoft, karmaşık problemleri sade ve etkili çözümlerle dönüştürmek için kuruldu.",
+      "Birçok şirketin en büyük sorunu teknoloji değil; doğru mimariyi kuramamak, süreçleri optimize edememek ve ölçeklenememektir.",
+      "Biz tam olarak burada devreye giriyoruz.",
+      "Her projeye sadece “yazılım” olarak değil, bir iş modeli, bir büyüme potansiyeli ve bir sistem olarak yaklaşıyoruz."
+    ],
+    "howTitle": "Nasıl çalışıyoruz?",
+    "howSteps": [
+      "Önce işinizi anlıyoruz",
+      "Gereksiz karmaşıklığı ortadan kaldırıyoruz",
+      "Ölçeklenebilir ve sürdürülebilir bir yapı kuruyoruz"
+    ],
+    "goal": "Amacımız sadece çalışan bir sistem değil, büyüdükçe sorun çıkarmayan bir sistem kurmak.",
+    "whyTitle": "Neden Nexgensoft?",
+    "whySteps": [
+      "Hızlı değil, doğru çözümler üretiriz",
+      "Sadece geliştirici değil, çözüm ortağıyız",
+      "Projeyi teslim edip kaybolmayız; süreci birlikte büyütürüz"
+    ],
+    "visionTitle": "Vizyon",
+    "visionBody": "Teknolojiyi karmaşık olmaktan çıkarıp, işletmeler için gerçek bir büyüme aracına dönüştürmek."
+  },
+  "contact": {
+    "pageTitle": "Projenizi konuşalım",
+    "pageIntro": "Fikriniz hazırsa, bir sonraki adımı birlikte atalım. Size en uygun çözümü hızlıca planlayalım.",
+    "name": "Ad Soyad",
+    "email": "E-posta",
+    "company": "Şirket",
+    "message": "Mesaj",
+    "send": "Gönder",
+    "sending": "Gönderiliyor…",
+    "success": "Mesajınız alındı.",
+    "error": "Gönderilemedi. Lütfen tekrar deneyin.",
+    "precheckHint": "Ön analiz talebinizi mesajınıza yazabilirsiniz.",
+    "applicationLink": "Başvuru sayfasına git",
+    "toastSuccess": "Teşekkürler! Mesajınız bize ulaştı.",
+    "toastServerError": "Şu an kaydedemedik. Biraz sonra tekrar dener misiniz?",
+    "toastRequestError": "Bağlantı kurulamadı. İnternetinizi kontrol edip yeniden deneyin.",
+    "toastNetworkError": "Ağ hatası oluştu. Lütfen tekrar deneyin.",
+    "filesLabel": "Ekler",
+    "filesHint": "İsteğe bağlı. En fazla {{max}} dosya; dosya başına en fazla 10 MB. İzin verilenler: PDF, görsel, Office, ZIP.",
+    "validation": {
+      "required": "Bu alanı doldurun.",
+      "nameMin": "En az 2 karakter girin.",
+      "emailInvalid": "Geçerli bir e-posta adresi girin.",
+      "messageMin": "En az 10 karakter girin.",
+      "filesMax": "En fazla {{count}} dosya ekleyebilirsiniz.",
+      "fileTooBig": "Bir dosya çok büyük (dosya başına en fazla 10 MB).",
+      "fileType": "Bir dosya türüne izin verilmiyor."
+    }
+  },
+  "application": {
+    "title": "Başvuru",
+    "intro": "Staj, işe alım ve iş ortaklığı başvurularınız için önce haritadaki konumu inceleyebilir; ardından iletişim formu üzerinden bize ulaşabilirsiniz.",
+    "mapTitle": "İstanbul Kadıköy — konum",
+    "ctaContact": "İletişim formuna git"
+  },
+  "brand": {
+    "ariaCompany": "Nexgensoft",
+    "nex": "Nexgen",
+    "soft": "soft"
+  },
+  "aria": {
+    "mainNavigation": "Ana gezinme",
+    "languageSwitcher": "Dil seçimi"
+  }
+}

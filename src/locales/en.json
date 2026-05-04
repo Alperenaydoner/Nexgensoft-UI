@@ -1,0 +1,126 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "getInTouch": "Get in Touch",
+    "application": "Apply"
+  },
+  "lang": {
+    "tr": "Türkçe",
+    "en": "English"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "impactLine": "Great software doesn’t just run—it grows your business.",
+    "impactSub": "Software that merely works is table stakes; software that scales is strategy. We build infrastructure for today’s load and tomorrow’s traffic."
+  },
+  "home": {
+    "badge": "Now Accepting New Projects",
+    "heroPrefix": "We Build Software That ",
+    "heroAccent": "Moves Business",
+    "heroSuffix": ".",
+    "heroSubtitle": "Premium custom software development, cloud solutions, and digital transformation for enterprises ready to lead their industries.",
+    "ctaExplore": "Explore Services →",
+    "ctaStart": "Start a Project",
+    "ctaPrecheck": "Request a free technical pre-assessment",
+    "statsAria": "Key metrics",
+    "stats": [
+      { "value": "500+", "label": "Projects Delivered" },
+      { "value": "98%", "label": "Client Satisfaction" },
+      { "value": "50+", "label": "Countries Served" },
+      { "value": "24/7", "label": "Support Available" }
+    ]
+  },
+  "services": {
+    "pageTitle": "Technology that grows your business",
+    "pageIntro": "We deliver sustainable, scalable software tailored to your needs.",
+    "items": [
+      {
+        "title": "APIs & Integration",
+        "body": "We unify your systems under one roof with fast, reliable data flows. For high traffic, we add Redis, SQL tuning, and queueing for throughput and a resilient data layer."
+      },
+      {
+        "title": "Web & Mobile Development",
+        "body": "We build fast, secure, user-friendly apps with modern stacks."
+      },
+      {
+        "title": "Cloud & DevOps",
+        "body": "We move infrastructure to the cloud and optimize performance and cost."
+      },
+      {
+        "title": "Consulting",
+        "body": "We support decisions with analysis, architecture, and process consulting."
+      }
+    ]
+  },
+  "about": {
+    "headline": "We don’t just ship software—we grow your business.",
+    "paras": [
+      "Nexgensoft exists to turn complex problems into simple, effective solutions.",
+      "For many companies the blocker isn’t “technology” as a buzzword—it’s architecture, process, and scale.",
+      "That’s exactly where we step in.",
+      "We treat every engagement as a business model, growth potential, and a system—not “just code.”"
+    ],
+    "howTitle": "How we work",
+    "howSteps": [
+      "We understand your business first",
+      "We remove unnecessary complexity",
+      "We build structures that scale and last"
+    ],
+    "goal": "Our goal isn’t only a working system—it’s one that won’t fight you as you grow.",
+    "whyTitle": "Why Nexgensoft?",
+    "whySteps": [
+      "We optimize for correct, not rushed",
+      "We’re partners—not order-takers",
+      "We don’t disappear after delivery; we grow with you"
+    ],
+    "visionTitle": "Vision",
+    "visionBody": "Make technology less complex—and more of a real growth lever for businesses."
+  },
+  "contact": {
+    "pageTitle": "Let’s talk about your project",
+    "pageIntro": "If you’re ready, we’ll take the next step together and plan the right solution quickly.",
+    "name": "Full name",
+    "email": "Email",
+    "company": "Company",
+    "message": "Message",
+    "send": "Send",
+    "sending": "Sending…",
+    "success": "We received your message.",
+    "error": "Could not send. Please try again.",
+    "precheckHint": "You can mention a pre-assessment request in your message.",
+    "applicationLink": "Go to the application page",
+    "toastSuccess": "Thanks — we’ve received your message.",
+    "toastServerError": "We couldn’t save that just now. Please try again in a moment.",
+    "toastRequestError": "We couldn’t reach the server. Check your connection and try again.",
+    "toastNetworkError": "A network error occurred. Please try again.",
+    "filesLabel": "Attachments",
+    "filesHint": "Optional. Up to {{max}} files, 10 MB each max. Allowed: PDF, images, Office, ZIP.",
+    "validation": {
+      "required": "This field is required.",
+      "nameMin": "Please enter at least 2 characters.",
+      "emailInvalid": "Please enter a valid email address.",
+      "messageMin": "Please enter at least 10 characters.",
+      "filesMax": "You can attach at most {{count}} files.",
+      "fileTooBig": "A file is too large (max 10 MB per file).",
+      "fileType": "A file type is not allowed."
+    }
+  },
+  "application": {
+    "title": "Applications",
+    "intro": "For internships, hiring, and partnership inquiries, review the map location below, then reach us through the contact form.",
+    "mapTitle": "Istanbul, Kadıköy — location",
+    "ctaContact": "Go to contact form"
+  },
+  "brand": {
+    "ariaCompany": "Nexgensoft",
+    "nex": "Nexgen",
+    "soft": "soft"
+  },
+  "aria": {
+    "mainNavigation": "Main navigation",
+    "languageSwitcher": "Language selection"
+  }
+}

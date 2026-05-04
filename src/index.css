@@ -1,0 +1,56 @@
+:root {
+  color-scheme: dark;
+  --nx-bg: #050a0f;
+  --nx-bg-elevated: #0c141c;
+  --nx-surface: rgba(12, 20, 28, 0.72);
+  --nx-accent: #10b981;
+  --nx-accent-hover: #34d399;
+  --nx-accent-muted: rgba(16, 185, 129, 0.14);
+  --nx-accent-glow: rgba(16, 185, 129, 0.35);
+  --nx-text: #f8fafc;
+  --nx-muted: #94a3b8;
+  --nx-subtle: #64748b;
+  --nx-border: rgba(148, 163, 184, 0.14);
+  --nx-radius: 12px;
+  --nx-radius-pill: 999px;
+  --nx-font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --nx-font-body: 'Inter', system-ui, sans-serif;
+  font-family: var(--nx-font-body);
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--nx-text);
+  background-color: var(--nx-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+[data-sonner-toaster][data-theme='dark'] {
+  --normal-bg: var(--nx-bg-elevated);
+  --normal-border: var(--nx-border);
+  --normal-text: var(--nx-text);
+}
+
+[data-sonner-toast] {
+  font-family: var(--nx-font-body);
+}
