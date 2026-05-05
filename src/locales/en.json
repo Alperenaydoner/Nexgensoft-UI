@@ -114,6 +114,106 @@
     "mapTitle": "Istanbul, Kadıköy — location",
     "ctaContact": "Go to contact form"
   },
+  "admin": {
+    "title": "Admin",
+    "sidebarAria": "Admin navigation",
+    "loginTitle": "Administrator sign-in",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in…",
+    "signedIn": "Signed in.",
+    "signOut": "Sign out",
+    "backToSite": "Back to site",
+    "backToList": "Back to list",
+    "viewDetail": "Details",
+    "dashboardTitle": "Dashboard",
+    "welcome": "Welcome, {{name}}",
+    "quickLinks": "Quick links",
+    "roles": "Roles",
+    "ping": "Verify API",
+    "pingOk": "Admin API access OK.",
+    "pingFail": "Could not reach the API.",
+    "forbidden": "This area is for the Admin role only.",
+    "invalidCredentials": "Invalid email or password.",
+    "loading": "Loading…",
+    "nav": {
+      "dashboard": "Overview",
+      "users": "Users",
+      "roles": "Roles",
+      "contact": "Contact",
+      "logs": "Request logs",
+      "content": "Site content"
+    },
+    "stats": {
+      "users": "Users",
+      "roles": "Roles",
+      "contactMessages": "Contact messages",
+      "contactAttachments": "Contact attachments",
+      "httpLogs": "HTTP request logs",
+      "contentBundles": "Content bundles (locales)",
+      "localizedStrings": "Localized strings"
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next",
+      "pageOf": "Page {{current}} / {{total}}"
+    },
+    "users": {
+      "displayName": "Display name",
+      "active": "Active",
+      "yes": "Yes",
+      "no": "No",
+      "created": "Created",
+      "normalizedEmail": "Normalized email",
+      "profile": "Profile"
+    },
+    "rolesTable": {
+      "name": "Role name",
+      "normalized": "Normalized",
+      "userCount": "Users"
+    },
+    "contact": {
+      "intro": "Messages submitted through the contact form.",
+      "from": "From",
+      "company": "Company",
+      "attachments": "Attachments",
+      "received": "Received",
+      "message": "Message",
+      "download": "Download / open"
+    },
+    "logs": {
+      "intro": "API and audit HTTP request logs.",
+      "pathContains": "Path contains",
+      "statusCode": "HTTP status",
+      "apply": "Apply",
+      "time": "Time",
+      "method": "Method",
+      "path": "Path",
+      "status": "Status",
+      "duration": "Duration",
+      "user": "User",
+      "detailTitle": "Log detail",
+      "query": "Query string",
+      "userId": "User id",
+      "roles": "Roles (raw)",
+      "clientIp": "Client IP",
+      "userAgent": "User-Agent",
+      "actionType": "Action type",
+      "actionTitle": "Action title",
+      "actionDescription": "Action description",
+      "bodySnippet": "Request body snippet",
+      "exception": "Exception"
+    },
+    "content": {
+      "intro": "Content bundles and static string counts.",
+      "bundles": "Bundles",
+      "strings": "Localized rows (total)",
+      "locale": "Locale",
+      "hasBundle": "Has bundle",
+      "stringCount": "String count"
+    }
+  },
   "brand": {
     "ariaCompany": "Nexgensoft",
     "nex": "Nexgen",

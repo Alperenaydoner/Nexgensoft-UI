@@ -50,7 +50,11 @@ HTTP 4xx/5xx gövdesi `application/problem+json` olabilir.
 }
 ```
 
-## Sayfalama: `PagedResult<T>`
+## Sayfalama: `PageRequest` + `PagedResult<T>`
+
+İstek (query): `page` (varsayılan 1), `pageSize` (varsayılan 20, üst sınır 100). Sunucu: `CoreService.Common.PageRequest` ile normalize edilir; `Skip = (pageNumber - 1) * pageSize`.
+
+### Cevap: `PagedResult<T>`
 
 ```json
 {

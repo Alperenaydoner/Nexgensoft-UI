@@ -31,7 +31,7 @@ function normalizeApiBase(raw: string | undefined): string {
 const defaultBase = normalizeApiBase(import.meta.env.VITE_API_BASE_URL).replace(/\/$/, '')
 
 /** Çapraz kökende `include` + sunucuda AllowCredentials eksikse CORS kırılır; API çerez kullanmıyorsa `omit` yeterli. */
-function requestCredentials(): RequestCredentials {
+export function getApiRequestCredentials(): RequestCredentials {
   if (typeof window === 'undefined') return 'omit'
   if (!defaultBase.startsWith('http')) return 'include'
   try {
@@ -58,7 +58,7 @@ export interface RequestOptions extends RequestInit {
   query?: Record<string, string | number | boolean | undefined | null>
 }
 
-function buildUrl(path: string, query?: RequestOptions['query']): string {
+export function buildApiUrl(path: string, query?: RequestOptions['query']): string {
   const segment = path.startsWith('/') ? path : `/${path}`
   const merged = `${defaultBase}${segment}`
   const url = merged.startsWith('http')
@@ -85,10 +85,10 @@ function localeHeaders(): HeadersInit {
 
 export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { jsonBody, query, headers, body, ...rest } = options
-  const url = buildUrl(path, query)
+  const url = buildApiUrl(path, query)
 
   const init: RequestInit = {
-    credentials: requestCredentials(),
+    credentials: getApiRequestCredentials(),
     headers: {
       ...localeHeaders(),
       ...(jsonBody !== undefined ? { 'Content-Type': 'application/json' } : {}),

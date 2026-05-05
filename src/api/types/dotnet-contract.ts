@@ -12,7 +12,13 @@ export interface ApiResult<T> {
   errors: string[] | null
 }
 
-/** Sayfalı liste (ör. PagedResult<T>) */
+/** Query: `page` (≥1), `pageSize` (1–100). Backend: `CoreService.Common.PageRequest`. */
+export interface PageQuery {
+  page?: number
+  pageSize?: number
+}
+
+/** Sayfalı liste (`CoreService.Common.PagedResult<T>`) */
 export interface PagedResult<T> {
   items: T[]
   pageNumber: number

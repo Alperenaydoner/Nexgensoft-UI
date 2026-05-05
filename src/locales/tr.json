@@ -114,6 +114,106 @@
     "mapTitle": "İstanbul Kadıköy — konum",
     "ctaContact": "İletişim formuna git"
   },
+  "admin": {
+    "title": "Yönetim",
+    "sidebarAria": "Yönetim menüsü",
+    "loginTitle": "Yönetici girişi",
+    "email": "E-posta",
+    "password": "Parola",
+    "signIn": "Giriş yap",
+    "signingIn": "Giriş yapılıyor…",
+    "signedIn": "Oturum açıldı.",
+    "signOut": "Çıkış",
+    "backToSite": "Siteye dön",
+    "backToList": "Listeye dön",
+    "viewDetail": "Detay",
+    "dashboardTitle": "Panel",
+    "welcome": "Hoş geldiniz, {{name}}",
+    "quickLinks": "Hızlı erişim",
+    "roles": "Roller",
+    "ping": "API doğrula",
+    "pingOk": "Yönetici API erişimi tamam.",
+    "pingFail": "API yanıtı alınamadı.",
+    "forbidden": "Bu alan yalnızca Admin rolü içindir.",
+    "invalidCredentials": "Geçersiz e-posta veya parola.",
+    "loading": "Yükleniyor…",
+    "nav": {
+      "dashboard": "Özet",
+      "users": "Kullanıcılar",
+      "roles": "Roller",
+      "contact": "İletişim",
+      "logs": "İstek günlüğü",
+      "content": "Site içeriği"
+    },
+    "stats": {
+      "users": "Kullanıcılar",
+      "roles": "Roller",
+      "contactMessages": "İletişim mesajları",
+      "contactAttachments": "İletişim ekleri",
+      "httpLogs": "HTTP günlük kayıtları",
+      "contentBundles": "İçerik paketi (locale)",
+      "localizedStrings": "Yerelleştirilmiş metin"
+    },
+    "pagination": {
+      "prev": "Önceki",
+      "next": "Sonraki",
+      "pageOf": "Sayfa {{current}} / {{total}}"
+    },
+    "users": {
+      "displayName": "Görünen ad",
+      "active": "Aktif",
+      "yes": "Evet",
+      "no": "Hayır",
+      "created": "Oluşturulma",
+      "normalizedEmail": "Normalize e-posta",
+      "profile": "Profil"
+    },
+    "rolesTable": {
+      "name": "Rol adı",
+      "normalized": "Normalize ad",
+      "userCount": "Kullanıcı sayısı"
+    },
+    "contact": {
+      "intro": "İletişim formundan gelen mesajlar.",
+      "from": "Gönderen",
+      "company": "Şirket",
+      "attachments": "Ek sayısı",
+      "received": "Alındı",
+      "message": "Mesaj",
+      "download": "İndir / aç"
+    },
+    "logs": {
+      "intro": "API ve denetim istek günlükleri.",
+      "pathContains": "Yol içerir",
+      "statusCode": "HTTP durum",
+      "apply": "Uygula",
+      "time": "Zaman",
+      "method": "Metot",
+      "path": "Yol",
+      "status": "Durum",
+      "duration": "Süre",
+      "user": "Kullanıcı",
+      "detailTitle": "Günlük detayı",
+      "query": "Sorgu",
+      "userId": "Kullanıcı Id",
+      "roles": "Roller (ham)",
+      "clientIp": "İstemci IP",
+      "userAgent": "User-Agent",
+      "actionType": "İşlem türü",
+      "actionTitle": "İşlem başlığı",
+      "actionDescription": "İşlem açıklaması",
+      "bodySnippet": "İstek gövdesi özeti",
+      "exception": "İstisna"
+    },
+    "content": {
+      "intro": "Site içeriği paketleri ve statik metin sayıları.",
+      "bundles": "Paket sayısı",
+      "strings": "Metin satırı (toplam)",
+      "locale": "Dil",
+      "hasBundle": "Paket var",
+      "stringCount": "Metin sayısı"
+    }
+  },
   "brand": {
     "ariaCompany": "Nexgensoft",
     "nex": "Nexgen",
