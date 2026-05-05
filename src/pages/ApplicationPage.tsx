@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { fetchApplicationPositions, submitApplication } from '@/api/applicationApi'
 import { FileDropzone } from '@/components/FileDropzone'
 import { ApiError } from '@/api/httpClient'
+import { Select } from '@/components/ui/Select'
 import { filesToBase64Attachments } from '@/utils/filesToBase64Attachments'
 
 import '@/pages/pages.css'
@@ -178,13 +179,15 @@ export function ApplicationPage() {
         </label>
         <label>
           {t('application.position')}
-          <select value={position} onChange={(e) => setPosition(e.target.value)} disabled={loadingPositions}>
-            {positionOptions.map((option) => (
-              <option key={option} value={option}>
-                {t(`application.positions.${option}`, { defaultValue: option })}
-              </option>
-            ))}
-          </select>
+          <Select
+            value={position}
+            onChange={setPosition}
+            disabled={loadingPositions}
+            options={positionOptions.map((option) => ({
+              value: option,
+              label: t(`application.positions.${option}`, { defaultValue: option }),
+            }))}
+          />
           {fieldErrors.position ? <span className="form-field-error">{fieldErrors.position}</span> : null}
         </label>
         <label>

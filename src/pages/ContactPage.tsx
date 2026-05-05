@@ -6,6 +6,7 @@ import { BriefcaseBusiness, Send } from 'lucide-react'
 
 import { ApiError } from '@/api/httpClient'
 import { submitContact } from '@/api/contactApi'
+import { Select } from '@/components/ui/Select'
 
 import '@/pages/pages.css'
 
@@ -121,12 +122,16 @@ export function ContactPage() {
         </label>
         <label>
           {t('contact.inquiryType')}
-          <select value={inquiryType} onChange={(e) => setInquiryType(e.target.value)}>
-            <option value="general">{t('contact.inquiryTypes.general')}</option>
-            <option value="partnership">{t('contact.inquiryTypes.partnership')}</option>
-            <option value="support">{t('contact.inquiryTypes.support')}</option>
-            <option value="sales">{t('contact.inquiryTypes.sales')}</option>
-          </select>
+          <Select
+            value={inquiryType}
+            onChange={setInquiryType}
+            options={[
+              { value: 'general', label: t('contact.inquiryTypes.general') },
+              { value: 'partnership', label: t('contact.inquiryTypes.partnership') },
+              { value: 'support', label: t('contact.inquiryTypes.support') },
+              { value: 'sales', label: t('contact.inquiryTypes.sales') },
+            ]}
+          />
         </label>
         <label>
           {t('contact.message')}

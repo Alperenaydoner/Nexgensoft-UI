@@ -121,22 +121,30 @@
   border: 1px solid var(--nx-border);
 }
 
-.lang-switch select {
-  appearance: none;
-  border: none;
-  background: transparent;
-  color: var(--nx-text);
-  padding: 0.2rem 1rem 0.2rem 0.05rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  outline: none;
-  line-height: 1;
+.lang-switch .nx-select {
+  min-width: 90px;
 }
 
-.lang-switch select option {
-  background: #0b1220;
-  color: #e2e8f0;
+.lang-switch .nx-select__trigger {
+  min-height: 30px;
+  border: none;
+  background: transparent;
+  padding: 0.1rem 0.2rem 0.1rem 0.05rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.lang-switch .nx-select__menu {
+  right: auto;
+  left: -0.4rem;
+  min-width: 130px;
+}
+
+.lang-switch:focus-within {
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
 }
 
 .main {
@@ -144,6 +152,22 @@
   width: min(1120px, 100% - 2rem);
   margin: 0 auto;
   padding: clamp(1.5rem, 4vw, 3rem) 0 clamp(2.5rem, 6vw, 4rem);
+}
+
+.nx-route-fade {
+  animation: nxRouteFadeIn 240ms ease-out;
+}
+
+@keyframes nxRouteFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .impact {

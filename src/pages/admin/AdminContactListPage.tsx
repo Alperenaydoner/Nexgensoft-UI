@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ExternalLink } from 'lucide-react'
 
 import { fetchAdminContactMessages, type AdminContactMessageListItem } from '@/api/adminApi'
+import { Select } from '@/components/ui/Select'
 import type { PagedResult } from '@/api/types/dotnet-contract'
 
 import { AdminPagination } from '@/pages/admin/AdminPagination'
@@ -58,24 +59,33 @@ export function AdminContactListPage() {
         <h2 className="admin-card__title">{t('admin.filters.title')}</h2>
         <div className="admin-users-filters">
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('admin.contact.searchPlaceholder')} />
-          <select value={hasAttachments} onChange={(e) => setHasAttachments(e.target.value as 'all' | 'yes' | 'no')}>
-            <option value="all">{t('admin.contact.allRecords')}</option>
-            <option value="yes">{t('admin.contact.withAttachments')}</option>
-            <option value="no">{t('admin.contact.withoutAttachments')}</option>
-          </select>
-          <select
+          <Select
+            value={hasAttachments}
+            onChange={(next) => setHasAttachments(next as 'all' | 'yes' | 'no')}
+            options={[
+              { value: 'all', label: t('admin.contact.allRecords') },
+              { value: 'yes', label: t('admin.contact.withAttachments') },
+              { value: 'no', label: t('admin.contact.withoutAttachments') },
+            ]}
+          />
+          <Select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'createdAtUtc' | 'fullName' | 'email' | 'attachments')}
-          >
-            <option value="createdAtUtc">{t('admin.contact.received')}</option>
-            <option value="fullName">{t('admin.contact.from')}</option>
-            <option value="email">{t('admin.email')}</option>
-            <option value="attachments">{t('admin.contact.attachments')}</option>
-          </select>
-          <select value={sortDir} onChange={(e) => setSortDir(e.target.value as 'asc' | 'desc')}>
-            <option value="desc">{t('admin.filters.sortDesc')}</option>
-            <option value="asc">{t('admin.filters.sortAsc')}</option>
-          </select>
+            onChange={(next) => setSortBy(next as 'createdAtUtc' | 'fullName' | 'email' | 'attachments')}
+            options={[
+              { value: 'createdAtUtc', label: t('admin.contact.received') },
+              { value: 'fullName', label: t('admin.contact.from') },
+              { value: 'email', label: t('admin.email') },
+              { value: 'attachments', label: t('admin.contact.attachments') },
+            ]}
+          />
+          <Select
+            value={sortDir}
+            onChange={(next) => setSortDir(next as 'asc' | 'desc')}
+            options={[
+              { value: 'desc', label: t('admin.filters.sortDesc') },
+              { value: 'asc', label: t('admin.filters.sortAsc') },
+            ]}
+          />
           <div className="admin-filters__actions">
             <button type="button" className="admin-btn admin-btn--primary" onClick={() => void load(1)} disabled={busy}>
               {t('admin.logs.apply')}

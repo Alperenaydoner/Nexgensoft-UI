@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Languages } from 'lucide-react'
+import { Select } from '@/components/ui/Select'
 
 const langs = [
   { code: 'tr', labelKey: 'lang.tr' as const },
@@ -8,17 +9,17 @@ const langs = [
 
 export function LanguageSwitcher() {
   const { i18n, t } = useTranslation()
+  const current = i18n.language.startsWith('en') ? 'en' : 'tr'
 
   return (
     <label className="lang-switch" aria-label={t('aria.languageSwitcher')}>
       <Languages size={14} strokeWidth={2} />
-      <select value={i18n.language.startsWith('en') ? 'en' : 'tr'} onChange={(e) => void i18n.changeLanguage(e.target.value)}>
-        {langs.map(({ code, labelKey }) => (
-          <option key={code} value={code}>
-            {t(labelKey)}
-          </option>
-        ))}
-      </select>
+      <Select
+        value={current}
+        onChange={(next) => void i18n.changeLanguage(next)}
+        options={langs.map(({ code, labelKey }) => ({ value: code, label: t(labelKey) }))}
+        ariaLabel={t('aria.languageSwitcher')}
+      />
     </label>
   )
 }

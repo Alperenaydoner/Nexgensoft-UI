@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, Shield, UserCog, Wrench } from 'lucide-react'
 
 import {
   bulkDeleteAdminUsers,
@@ -16,6 +16,7 @@ import type { PagedResult } from '@/api/types/dotnet-contract'
 import { AdminPagination } from '@/pages/admin/AdminPagination'
 import { AdminConfirmDialog, AdminPanelDialog } from '@/pages/admin/AdminDialogs'
 import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
+import { Select } from '@/components/ui/Select'
 
 function formatDt(iso: string) {
   try {
@@ -23,6 +24,22 @@ function formatDt(iso: string) {
   } catch {
     return iso
   }
+}
+
+type RoleChipVariant = 'admin' | 'manager' | 'editor' | 'default'
+
+function getRoleChipVariant(roleName: string): RoleChipVariant {
+  const normalized = roleName.trim().toLowerCase()
+  if (normalized.includes('admin')) {
+    return 'admin'
+  }
+  if (normalized.includes('manager')) {
+    return 'manager'
+  }
+  if (normalized.includes('editor') || normalized.includes('content')) {
+    return 'editor'
+  }
+  return 'default'
 }
 
 export function AdminUsersPage() {
@@ -133,6 +150,10 @@ export function AdminUsersPage() {
     }
   }
 
+  function toggleCreateRole(roleName: string) {
+    setCreateRoles((prev) => (prev.includes(roleName) ? prev.filter((r) => r !== roleName) : [...prev, roleName]))
+  }
+
   return (
     <div className="admin-page">
       <div className="admin-page__head">
@@ -145,29 +166,41 @@ export function AdminUsersPage() {
         <h2 className="admin-card__title">{t('admin.filters.title')}</h2>
         <div className="admin-users-filters">
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('admin.usersCrud.searchPlaceholder')} />
-          <select value={isActive} onChange={(e) => setIsActive(e.target.value as 'all' | 'true' | 'false')}>
-            <option value="all">{t('admin.filters.allStatuses')}</option>
-            <option value="true">{t('admin.users.yes')}</option>
-            <option value="false">{t('admin.users.no')}</option>
-          </select>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="">{t('admin.filters.allRoles')}</option>
-            {roles.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value as 'createdAtUtc' | 'email' | 'displayName' | 'active')}>
-            <option value="createdAtUtc">{t('admin.users.created')}</option>
-            <option value="email">{t('admin.email')}</option>
-            <option value="displayName">{t('admin.users.displayName')}</option>
-            <option value="active">{t('admin.users.active')}</option>
-          </select>
-          <select value={sortDir} onChange={(e) => setSortDir(e.target.value as 'asc' | 'desc')}>
-            <option value="desc">{t('admin.filters.sortDesc')}</option>
-            <option value="asc">{t('admin.filters.sortAsc')}</option>
-          </select>
+          <Select
+            value={isActive}
+            onChange={(next) => setIsActive(next as 'all' | 'true' | 'false')}
+            options={[
+              { value: 'all', label: t('admin.filters.allStatuses') },
+              { value: 'true', label: t('admin.users.yes') },
+              { value: 'false', label: t('admin.users.no') },
+            ]}
+          />
+          <Select
+            value={role}
+            onChange={setRole}
+            options={[
+              { value: '', label: t('admin.filters.allRoles') },
+              ...roles.map((r) => ({ value: r, label: r })),
+            ]}
+          />
+          <Select
+            value={sortBy}
+            onChange={(next) => setSortBy(next as 'createdAtUtc' | 'email' | 'displayName' | 'active')}
+            options={[
+              { value: 'createdAtUtc', label: t('admin.users.created') },
+              { value: 'email', label: t('admin.email') },
+              { value: 'displayName', label: t('admin.users.displayName') },
+              { value: 'active', label: t('admin.users.active') },
+            ]}
+          />
+          <Select
+            value={sortDir}
+            onChange={(next) => setSortDir(next as 'asc' | 'desc')}
+            options={[
+              { value: 'desc', label: t('admin.filters.sortDesc') },
+              { value: 'asc', label: t('admin.filters.sortAsc') },
+            ]}
+          />
           <div className="admin-filters__actions">
             <button type="button" className="admin-btn admin-btn--primary" onClick={() => void load(1)} disabled={busy}>
               {t('admin.logs.apply')}
@@ -285,17 +318,25 @@ export function AdminUsersPage() {
             type="password"
             placeholder={t('admin.password')}
           />
-          <select
-            multiple
-            value={createRoles}
-            onChange={(e) => setCreateRoles(Array.from(e.target.selectedOptions).map((x) => x.value))}
-          >
-            {roles.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
+          <div className="admin-role-picker" role="group" aria-label={t('admin.filters.allRoles')}>
+            {roles.map((r) => {
+              const selected = createRoles.includes(r)
+              const variant = getRoleChipVariant(r)
+              const Icon = variant === 'admin' ? Shield : variant === 'manager' ? UserCog : variant === 'editor' ? Wrench : Shield
+              return (
+                <button
+                  key={r}
+                  type="button"
+                  className={`admin-role-chip admin-role-chip--${variant}${selected ? ' admin-role-chip--selected' : ''}`}
+                  onClick={() => toggleCreateRole(r)}
+                  aria-pressed={selected}
+                >
+                  <Icon size={13} strokeWidth={2} />
+                  {r}
+                </button>
+              )
+            })}
+          </div>
           <div className="admin-row">
             <button type="button" className="admin-btn admin-btn--ghost" onClick={() => setShowCreateModal(false)}>
               {t('admin.actions.cancel')}

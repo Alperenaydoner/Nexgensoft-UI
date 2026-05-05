@@ -10,6 +10,7 @@ import {
   updateAdminRole,
   type AdminRoleListItem,
 } from '@/api/adminApi'
+import { Select } from '@/components/ui/Select'
 import type { PagedResult } from '@/api/types/dotnet-contract'
 
 import { AdminPagination } from '@/pages/admin/AdminPagination'
@@ -114,15 +115,23 @@ export function AdminRolesPage() {
         <h2 className="admin-card__title">{t('admin.filters.title')}</h2>
         <div className="admin-users-filters">
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('admin.rolesCrud.searchPlaceholder')} />
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value as 'name' | 'normalizedName' | 'users')}>
-            <option value="name">{t('admin.rolesTable.name')}</option>
-            <option value="normalizedName">{t('admin.rolesTable.normalized')}</option>
-            <option value="users">{t('admin.rolesTable.userCount')}</option>
-          </select>
-          <select value={sortDir} onChange={(e) => setSortDir(e.target.value as 'asc' | 'desc')}>
-            <option value="asc">A-Z</option>
-            <option value="desc">Z-A</option>
-          </select>
+          <Select
+            value={sortBy}
+            onChange={(next) => setSortBy(next as 'name' | 'normalizedName' | 'users')}
+            options={[
+              { value: 'name', label: t('admin.rolesTable.name') },
+              { value: 'normalizedName', label: t('admin.rolesTable.normalized') },
+              { value: 'users', label: t('admin.rolesTable.userCount') },
+            ]}
+          />
+          <Select
+            value={sortDir}
+            onChange={(next) => setSortDir(next as 'asc' | 'desc')}
+            options={[
+              { value: 'asc', label: 'A-Z' },
+              { value: 'desc', label: 'Z-A' },
+            ]}
+          />
           <div className="admin-filters__actions">
             <button type="button" className="admin-btn admin-btn--primary" onClick={() => void load(1)} disabled={busy}>
               {t('admin.logs.apply')}

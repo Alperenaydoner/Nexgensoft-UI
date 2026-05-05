@@ -5,6 +5,7 @@ import { ExternalLink } from 'lucide-react'
 
 import { fetchAdminJobApplications, type AdminJobApplicationListItem } from '@/api/adminApi'
 import { fetchApplicationPositions } from '@/api/applicationApi'
+import { Select } from '@/components/ui/Select'
 import type { PagedResult } from '@/api/types/dotnet-contract'
 import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
 import { AdminPagination } from '@/pages/admin/AdminPagination'
@@ -75,35 +76,41 @@ export function AdminApplicationsPage() {
         <h2 className="admin-card__title">{t('admin.filters.title')}</h2>
         <div className="admin-users-filters">
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('admin.applications.searchPlaceholder')} />
-          <select value={position} onChange={(e) => setPosition(e.target.value)}>
-            <option value="">{t('admin.filters.allPositions')}</option>
-            {positions.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
-          <select value={hasAttachments} onChange={(e) => setHasAttachments(e.target.value as 'all' | 'yes' | 'no')}>
-            <option value="all">{t('admin.contact.allRecords')}</option>
-            <option value="yes">{t('admin.contact.withAttachments')}</option>
-            <option value="no">{t('admin.contact.withoutAttachments')}</option>
-          </select>
+          <Select
+            value={position}
+            onChange={setPosition}
+            options={[{ value: '', label: t('admin.filters.allPositions') }, ...positions.map((p) => ({ value: p, label: p }))]}
+          />
+          <Select
+            value={hasAttachments}
+            onChange={(next) => setHasAttachments(next as 'all' | 'yes' | 'no')}
+            options={[
+              { value: 'all', label: t('admin.contact.allRecords') },
+              { value: 'yes', label: t('admin.contact.withAttachments') },
+              { value: 'no', label: t('admin.contact.withoutAttachments') },
+            ]}
+          />
           <input type="datetime-local" value={fromUtc} onChange={(e) => setFromUtc(e.target.value)} />
           <input type="datetime-local" value={toUtc} onChange={(e) => setToUtc(e.target.value)} />
-          <select
+          <Select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'createdAtUtc' | 'fullName' | 'email' | 'position' | 'attachments')}
-          >
-            <option value="createdAtUtc">{t('admin.contact.received')}</option>
-            <option value="fullName">{t('admin.contact.from')}</option>
-            <option value="email">{t('admin.email')}</option>
-            <option value="position">{t('admin.applications.position')}</option>
-            <option value="attachments">{t('admin.contact.attachments')}</option>
-          </select>
-          <select value={sortDir} onChange={(e) => setSortDir(e.target.value as 'asc' | 'desc')}>
-            <option value="desc">{t('admin.filters.sortDesc')}</option>
-            <option value="asc">{t('admin.filters.sortAsc')}</option>
-          </select>
+            onChange={(next) => setSortBy(next as 'createdAtUtc' | 'fullName' | 'email' | 'position' | 'attachments')}
+            options={[
+              { value: 'createdAtUtc', label: t('admin.contact.received') },
+              { value: 'fullName', label: t('admin.contact.from') },
+              { value: 'email', label: t('admin.email') },
+              { value: 'position', label: t('admin.applications.position') },
+              { value: 'attachments', label: t('admin.contact.attachments') },
+            ]}
+          />
+          <Select
+            value={sortDir}
+            onChange={(next) => setSortDir(next as 'asc' | 'desc')}
+            options={[
+              { value: 'desc', label: t('admin.filters.sortDesc') },
+              { value: 'asc', label: t('admin.filters.sortAsc') },
+            ]}
+          />
           <div className="admin-filters__actions">
             <button type="button" className="admin-btn admin-btn--primary" onClick={() => void load(1)} disabled={busy}>
               {t('admin.logs.apply')}

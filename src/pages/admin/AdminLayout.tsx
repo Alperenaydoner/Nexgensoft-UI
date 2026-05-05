@@ -266,7 +266,9 @@ export function AdminLayout() {
           </div>
         </header>
         <div className="admin-content">
-          <Outlet context={{ user } satisfies AdminOutletContext} />
+          <div key={location.pathname} className="nx-route-fade">
+            <Outlet context={{ user } satisfies AdminOutletContext} />
+          </div>
         </div>
       </div>
       {searchOpen ? (

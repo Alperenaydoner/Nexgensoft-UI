@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { ArrowLeft, PencilLine, Trash2 } from 'lucide-react'
 
 import { deleteAdminUser, fetchAdminRoleOptions, fetchAdminUser, updateAdminUser, type AdminUserDetail } from '@/api/adminApi'
+import { Select } from '@/components/ui/Select'
 import { AdminConfirmDialog } from '@/pages/admin/AdminDialogs'
 
 export function AdminUserDetailPage() {
@@ -20,6 +21,10 @@ export function AdminUserDetailPage() {
   const [selectedRoles, setSelectedRoles] = useState<string[]>([])
   const [password, setPassword] = useState('')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
+  function toggleRole(roleName: string) {
+    setSelectedRoles((prev) => (prev.includes(roleName) ? prev.filter((r) => r !== roleName) : [...prev, roleName]))
+  }
 
   useEffect(() => {
     if (!id) {
@@ -124,27 +129,33 @@ export function AdminUserDetailPage() {
             <h2 className="admin-card__title">{t('admin.actions.update')}</h2>
             <div className="admin-users-create">
               <input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder={t('admin.users.displayName')} />
-              <select value={isActive ? 'true' : 'false'} onChange={(e) => setIsActive(e.target.value === 'true')}>
-                <option value="true">{t('admin.users.yes')}</option>
-                <option value="false">{t('admin.users.no')}</option>
-              </select>
+              <Select
+                value={isActive ? 'true' : 'false'}
+                onChange={(next) => setIsActive(next === 'true')}
+                options={[
+                  { value: 'true', label: t('admin.users.yes') },
+                  { value: 'false', label: t('admin.users.no') },
+                ]}
+              />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={t('admin.users.newPasswordOptional')}
               />
-              <select
-                multiple
-                value={selectedRoles}
-                onChange={(e) => setSelectedRoles(Array.from(e.target.selectedOptions).map((x) => x.value))}
-              >
+              <div className="admin-role-picker" role="group" aria-label={t('admin.roles')}>
                 {roles.map((r) => (
-                  <option key={r} value={r}>
+                  <button
+                    key={r}
+                    type="button"
+                    className={`admin-role-chip${selectedRoles.includes(r) ? ' admin-role-chip--selected' : ''}`}
+                    onClick={() => toggleRole(r)}
+                    aria-pressed={selectedRoles.includes(r)}
+                  >
                     {r}
-                  </option>
+                  </button>
                 ))}
-              </select>
+              </div>
               <button
                 type="button"
                 className="admin-btn admin-btn--primary"

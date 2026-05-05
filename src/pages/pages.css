@@ -407,6 +407,27 @@
   transition: border-color 0.2s ease;
 }
 
+.form select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #94a3b8 50%),
+    linear-gradient(135deg, #94a3b8 50%, transparent 50%);
+  background-position:
+    calc(100% - 16px) calc(50% - 2px),
+    calc(100% - 10px) calc(50% - 2px);
+  background-size:
+    6px 6px,
+    6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 2rem;
+  color-scheme: dark;
+}
+
+.form select option {
+  background: #0b1220;
+  color: #e2e8f0;
+}
+
 .file-dropzone {
   display: grid;
   gap: 0.55rem;
@@ -501,6 +522,7 @@
 }
 
 .form input:focus,
+.form select:focus,
 .form textarea:focus {
   outline: none;
   border-color: rgba(16, 185, 129, 0.45);

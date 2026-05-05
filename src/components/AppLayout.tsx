@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { BriefcaseBusiness, CircleUserRound, House, Mail, Sparkles } from 'lucide-react'
 
@@ -8,6 +8,7 @@ import '@/components/app-layout.css'
 
 export function AppLayout() {
   const { t } = useTranslation()
+  const location = useLocation()
 
   return (
     <div className="shell">
@@ -47,7 +48,9 @@ export function AppLayout() {
         </div>
       </header>
       <main className="main">
-        <Outlet />
+        <div key={location.pathname} className="nx-route-fade">
+          <Outlet />
+        </div>
       </main>
       <section className="impact" aria-label={t('brand.ariaCompany')}>
         <p className="impact__line">{t('footer.impactLine')}</p>
