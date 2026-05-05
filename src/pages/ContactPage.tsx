@@ -1,52 +1,24 @@
-import { FormEvent, useMemo, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { BriefcaseBusiness, Send } from 'lucide-react'
 
 import { ApiError } from '@/api/httpClient'
 import { submitContact } from '@/api/contactApi'
-import { filesToBase64Attachments } from '@/utils/filesToBase64Attachments'
 
 import '@/pages/pages.css'
-
-const maxFiles = 10
-const maxBytesPerFile = 10 * 1024 * 1024
-const allowedExt = new Set([
-  '.pdf',
-  '.png',
-  '.jpg',
-  '.jpeg',
-  '.webp',
-  '.gif',
-  '.doc',
-  '.docx',
-  '.xls',
-  '.xlsx',
-  '.txt',
-  '.zip',
-])
-
-function extensionOf(name: string): string {
-  const i = name.lastIndexOf('.')
-  return i >= 0 ? name.slice(i).toLowerCase() : ''
-}
 
 export function ContactPage() {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
-  const [files, setFiles] = useState<File[]>([])
+  const [inquiryType, setInquiryType] = useState('general')
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
-
-  const acceptAttr = useMemo(
-    () => Array.from(allowedExt).filter((e) => e.length > 0).join(','),
-    [],
-  )
 
   function validate(
     fullName: string,
     email: string,
     message: string,
-    selected: File[],
   ): boolean {
     const next: Record<string, string> = {}
     if (!fullName.trim()) {
@@ -64,20 +36,6 @@ export function ContactPage() {
     } else if (message.trim().length < 10) {
       next.message = t('contact.validation.messageMin')
     }
-    if (selected.length > maxFiles) {
-      next.files = t('contact.validation.filesMax', { count: maxFiles })
-    }
-    for (const f of selected) {
-      if (f.size > maxBytesPerFile) {
-        next.files = t('contact.validation.fileTooBig')
-        break
-      }
-      const ext = extensionOf(f.name)
-      if (!ext || !allowedExt.has(ext)) {
-        next.files = t('contact.validation.fileType')
-        break
-      }
-    }
     setFieldErrors(next)
     return Object.keys(next).length === 0
   }
@@ -91,19 +49,17 @@ export function ContactPage() {
     const company = String(fd.get('company') ?? '').trim() || null
     const message = String(fd.get('message') ?? '').trim()
 
-    if (!validate(fullName, email, message, files)) {
+    if (!validate(fullName, email, message)) {
       return
     }
 
     setLoading(true)
     try {
-      const attachments = files.length > 0 ? await filesToBase64Attachments(files) : undefined
       const res = await submitContact({
         fullName,
         email,
         company,
-        message,
-        attachments: attachments && attachments.length > 0 ? attachments : undefined,
+        message: `[${inquiryType}] ${message}`,
       })
       if (!res.success) {
         toast.error(t('contact.toastServerError'))
@@ -111,7 +67,7 @@ export function ContactPage() {
       }
       toast.success(t('contact.toastSuccess'))
       form.reset()
-      setFiles([])
+      setInquiryType('general')
       setFieldErrors({})
     } catch (err) {
       if (err instanceof ApiError) {
@@ -129,10 +85,7 @@ export function ContactPage() {
       <h1>{t('contact.pageTitle')}</h1>
       <p className="lead">{t('contact.pageIntro')}</p>
       <p className="contact-hint">{t('contact.precheckHint')}</p>
-      <p className="contact-work-link">
-        <Link to="/basvuru">{t('contact.applicationLink')}</Link>
-      </p>
-      <form className="form" noValidate onSubmit={(e) => void onSubmit(e)}>
+      <form className="form page-card" noValidate onSubmit={(e) => void onSubmit(e)}>
         <label>
           {t('contact.name')}
           <input
@@ -167,6 +120,15 @@ export function ContactPage() {
           <input name="company" autoComplete="organization" />
         </label>
         <label>
+          {t('contact.inquiryType')}
+          <select value={inquiryType} onChange={(e) => setInquiryType(e.target.value)}>
+            <option value="general">{t('contact.inquiryTypes.general')}</option>
+            <option value="partnership">{t('contact.inquiryTypes.partnership')}</option>
+            <option value="support">{t('contact.inquiryTypes.support')}</option>
+            <option value="sales">{t('contact.inquiryTypes.sales')}</option>
+          </select>
+        </label>
+        <label>
           {t('contact.message')}
           <textarea
             name="message"
@@ -180,38 +142,15 @@ export function ContactPage() {
             </span>
           ) : null}
         </label>
-        <label>
-          {t('contact.filesLabel')}
-          <input
-            type="file"
-            multiple
-            accept={acceptAttr}
-            aria-invalid={fieldErrors.files ? true : undefined}
-            aria-describedby={fieldErrors.files ? 'err-files' : undefined}
-            onChange={(ev) => {
-              const list = Array.from(ev.target.files ?? [])
-              setFiles(list)
-              setFieldErrors((prev) => {
-                if (!('files' in prev)) {
-                  return prev
-                }
-                const next = { ...prev }
-                delete next.files
-                return next
-              })
-            }}
-          />
-          <span className="contact-files-hint">{t('contact.filesHint', { max: maxFiles })}</span>
-          {fieldErrors.files ? (
-            <span id="err-files" className="form-field-error" role="alert">
-              {fieldErrors.files}
-            </span>
-          ) : null}
-        </label>
         <button type="submit" disabled={loading}>
+          <Send size={14} strokeWidth={2} />
           {loading ? t('contact.sending') : t('contact.send')}
         </button>
       </form>
+      <p className="contact-work-link contact-work-link--icon">
+        <BriefcaseBusiness size={14} strokeWidth={2} />
+        <Link to="/basvuru">{t('contact.applicationLink')}</Link>
+      </p>
     </section>
   )
 }

@@ -91,6 +91,13 @@
     "success": "We received your message.",
     "error": "Could not send. Please try again.",
     "precheckHint": "You can mention a pre-assessment request in your message.",
+    "inquiryType": "Inquiry type",
+    "inquiryTypes": {
+      "general": "General inquiry",
+      "partnership": "Partnership",
+      "support": "Technical support",
+      "sales": "Sales / proposal"
+    },
     "applicationLink": "Go to the application page",
     "toastSuccess": "Thanks — we’ve received your message.",
     "toastServerError": "We couldn’t save that just now. Please try again in a moment.",
@@ -110,9 +117,28 @@
   },
   "application": {
     "title": "Applications",
-    "intro": "For internships, hiring, and partnership inquiries, review the map location below, then reach us through the contact form.",
+    "intro": "Use the form below to apply for open positions.",
+    "phone": "Phone",
+    "position": "Position",
+    "coverLetter": "Cover letter (optional)",
+    "cvFiles": "CV and supporting files",
+    "dropzoneHint": "Drop files here or click to choose",
+    "send": "Submit application",
+    "sending": "Submitting application…",
+    "toastSuccess": "Your application has been received.",
+    "toastServerError": "We could not save your application now. Please try again.",
+    "toastRequestError": "Could not reach the server. Please try again.",
+    "toastNetworkError": "A network error occurred. Please try again.",
     "mapTitle": "Istanbul, Kadıköy — location",
-    "ctaContact": "Go to contact form"
+    "ctaContact": "Go to contact form",
+    "positions": {
+      "backend": "Backend Developer",
+      "frontend": "Frontend Developer",
+      "fullstack": "Fullstack Developer",
+      "mobile": "Mobile Developer",
+      "devops": "DevOps Engineer",
+      "intern": "Intern"
+    }
   },
   "admin": {
     "title": "Admin",
@@ -136,12 +162,21 @@
     "pingFail": "Could not reach the API.",
     "forbidden": "This area is for the Admin role only.",
     "invalidCredentials": "Invalid email or password.",
+    "rememberMe": "Remember me",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "loading": "Loading…",
+    "search": {
+      "title": "Quick search",
+      "placeholder": "Search users, roles, messages, applications, locales...",
+      "close": "Close search"
+    },
     "nav": {
       "dashboard": "Overview",
       "users": "Users",
       "roles": "Roles",
       "contact": "Contact",
+      "applications": "Applications",
       "logs": "Request logs",
       "content": "Site content"
     },
@@ -150,6 +185,8 @@
       "roles": "Roles",
       "contactMessages": "Contact messages",
       "contactAttachments": "Contact attachments",
+      "jobApplications": "Applications",
+      "jobApplicationAttachments": "Application attachments",
       "httpLogs": "HTTP request logs",
       "contentBundles": "Content bundles (locales)",
       "localizedStrings": "Localized strings"
@@ -166,7 +203,8 @@
       "no": "No",
       "created": "Created",
       "normalizedEmail": "Normalized email",
-      "profile": "Profile"
+      "profile": "Profile",
+      "newPasswordOptional": "New password (optional)"
     },
     "rolesTable": {
       "name": "Role name",
@@ -180,7 +218,17 @@
       "attachments": "Attachments",
       "received": "Received",
       "message": "Message",
-      "download": "Download / open"
+      "download": "Download / open",
+      "searchPlaceholder": "Search name, email, company, message",
+      "allRecords": "All records",
+      "withAttachments": "With attachments",
+      "withoutAttachments": "Without attachments"
+    },
+    "applications": {
+      "searchPlaceholder": "Search name, email, phone, or position",
+      "position": "Position",
+      "phone": "Phone",
+      "coverLetter": "Cover letter"
     },
     "logs": {
       "intro": "API and audit HTTP request logs.",
@@ -211,7 +259,72 @@
       "strings": "Localized rows (total)",
       "locale": "Locale",
       "hasBundle": "Has bundle",
-      "stringCount": "String count"
+      "stringCount": "String count",
+      "detailEdit": "Detail / edit",
+      "searchLocale": "Search locale"
+    },
+    "contentEditor": {
+      "title": "Key-Value editor",
+      "value": "Value",
+      "search": "Search key or value",
+      "newRow": "New row",
+      "keyExample": "home.heroTitle",
+      "saveAll": "Save all",
+      "saving": "Saving...",
+      "saved": "All changes saved.",
+      "auditTitle": "Basic audit / version trace",
+      "localeTitle": "Content locale: {{locale}}",
+      "validation": {
+        "emptyKey": "Key cannot be empty.",
+        "duplicateKey": "Duplicate key found: {{key}}"
+      }
+    },
+    "empty": {
+      "noResults": "No records found.",
+      "noAudit": "No audit records yet."
+    },
+    "actions": {
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "closeEdit": "Close editing",
+      "failed": "Operation failed.",
+      "bulkDeleteSelected": "Delete selected ({{count}})",
+      "bulkDeleteTitle": "Bulk delete confirmation",
+      "bulkDeleteMessage": "Delete {{count}} users?"
+    },
+    "filters": {
+      "title": "Filters",
+      "allStatuses": "All statuses",
+      "allRoles": "All roles",
+      "allPositions": "All positions",
+      "sortDesc": "Z-A / New-Old",
+      "sortAsc": "A-Z / Old-New"
+    },
+    "usersCrud": {
+      "newUserTitle": "New user",
+      "searchPlaceholder": "Search email / name",
+      "emailPasswordRequired": "Email and password are required.",
+      "created": "User created.",
+      "updated": "User updated.",
+      "deleted": "User deleted.",
+      "bulkDeleted": "{{count}} users deleted.",
+      "deleteTitle": "Delete user confirmation",
+      "deleteMessage": "Delete user {{email}}?"
+    },
+    "rolesCrud": {
+      "newRoleTitle": "New role",
+      "roleName": "Role name",
+      "searchPlaceholder": "Search role",
+      "created": "Role created.",
+      "updated": "Role updated.",
+      "deleted": "Role deleted.",
+      "editTitle": "Update role name",
+      "deleteTitle": "Delete role confirmation",
+      "deleteMessage": "Delete role {{name}}?"
     }
   },
   "brand": {

@@ -9,7 +9,10 @@ import { HomePage } from '@/pages/HomePage'
 import { ServicesPage } from '@/pages/ServicesPage'
 import { AdminContactDetailPage } from '@/pages/admin/AdminContactDetailPage'
 import { AdminContactListPage } from '@/pages/admin/AdminContactListPage'
+import { AdminApplicationDetailPage } from '@/pages/admin/AdminApplicationDetailPage'
+import { AdminApplicationsPage } from '@/pages/admin/AdminApplicationsPage'
 import { AdminContentPage } from '@/pages/admin/AdminContentPage'
+import { AdminContentLocaleDetailPage } from '@/pages/admin/AdminContentLocaleDetailPage'
 import { AdminHomePage } from '@/pages/admin/AdminHomePage'
 import { AdminLayout } from '@/pages/admin/AdminLayout'
 import { AdminLoginPage } from '@/pages/admin/AdminLoginPage'
@@ -32,9 +35,12 @@ export default function App() {
           <Route path="roles" element={<AdminRolesPage />} />
           <Route path="contact" element={<AdminContactListPage />} />
           <Route path="contact/:id" element={<AdminContactDetailPage />} />
+          <Route path="applications" element={<AdminApplicationsPage />} />
+          <Route path="applications/:id" element={<AdminApplicationDetailPage />} />
           <Route path="logs" element={<AdminLogsPage />} />
           <Route path="logs/:id" element={<AdminLogDetailPage />} />
           <Route path="content" element={<AdminContentPage />} />
+          <Route path="content/:locale" element={<AdminContentLocaleDetailPage />} />
         </Route>
         <Route element={<AppLayout />}>
           <Route index element={<HomePage />} />

@@ -3,20 +3,24 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ExternalLink } from 'lucide-react'
 
-import { fetchAdminContactMessages, type AdminContactMessageListItem } from '@/api/adminApi'
+import { fetchAdminJobApplications, type AdminJobApplicationListItem } from '@/api/adminApi'
+import { fetchApplicationPositions } from '@/api/applicationApi'
 import type { PagedResult } from '@/api/types/dotnet-contract'
-
-import { AdminPagination } from '@/pages/admin/AdminPagination'
 import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
+import { AdminPagination } from '@/pages/admin/AdminPagination'
 
-export function AdminContactListPage() {
+export function AdminApplicationsPage() {
   const { t } = useTranslation()
-  const [data, setData] = useState<PagedResult<AdminContactMessageListItem> | null>(null)
+  const [data, setData] = useState<PagedResult<AdminJobApplicationListItem> | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(true)
   const [query, setQuery] = useState('')
+  const [position, setPosition] = useState('')
+  const [positions, setPositions] = useState<string[]>([])
   const [hasAttachments, setHasAttachments] = useState<'all' | 'yes' | 'no'>('all')
-  const [sortBy, setSortBy] = useState<'createdAtUtc' | 'fullName' | 'email' | 'attachments'>('createdAtUtc')
+  const [fromUtc, setFromUtc] = useState('')
+  const [toUtc, setToUtc] = useState('')
+  const [sortBy, setSortBy] = useState<'createdAtUtc' | 'fullName' | 'email' | 'position' | 'attachments'>('createdAtUtc')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
 
   const load = useCallback(async (p: number) => {
@@ -24,13 +28,14 @@ export function AdminContactListPage() {
     setError(null)
     try {
       setData(
-        await fetchAdminContactMessages(
+        await fetchAdminJobApplications(
           p,
           20,
           query.trim() || undefined,
+          position.trim() || undefined,
           hasAttachments === 'all' ? undefined : hasAttachments === 'yes',
-          undefined,
-          undefined,
+          fromUtc || undefined,
+          toUtc || undefined,
           sortBy,
           sortDir,
         ),
@@ -40,36 +45,59 @@ export function AdminContactListPage() {
     } finally {
       setBusy(false)
     }
-  }, [hasAttachments, query, sortBy, sortDir])
+  }, [fromUtc, hasAttachments, position, query, sortBy, sortDir, toUtc])
 
   useEffect(() => {
     void load(1)
   }, [load])
 
+  useEffect(() => {
+    let cancelled = false
+    void fetchApplicationPositions()
+      .then((items) => {
+        if (cancelled) {
+          return
+        }
+        setPositions(items.map((x) => x.value).filter(Boolean))
+      })
+      .catch(() => undefined)
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   return (
     <div className="admin-page">
       <div className="admin-page__head">
-        <div>
-          <h1 className="admin-page__title">{t('admin.nav.contact')}</h1>
-          <p className="admin-muted">{t('admin.contact.intro')}</p>
-        </div>
+        <h1 className="admin-page__title">{t('admin.nav.applications')}</h1>
       </div>
       <div className="admin-card admin-card--flat">
         <h2 className="admin-card__title">{t('admin.filters.title')}</h2>
         <div className="admin-users-filters">
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('admin.contact.searchPlaceholder')} />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('admin.applications.searchPlaceholder')} />
+          <select value={position} onChange={(e) => setPosition(e.target.value)}>
+            <option value="">{t('admin.filters.allPositions')}</option>
+            {positions.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </select>
           <select value={hasAttachments} onChange={(e) => setHasAttachments(e.target.value as 'all' | 'yes' | 'no')}>
             <option value="all">{t('admin.contact.allRecords')}</option>
             <option value="yes">{t('admin.contact.withAttachments')}</option>
             <option value="no">{t('admin.contact.withoutAttachments')}</option>
           </select>
+          <input type="datetime-local" value={fromUtc} onChange={(e) => setFromUtc(e.target.value)} />
+          <input type="datetime-local" value={toUtc} onChange={(e) => setToUtc(e.target.value)} />
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'createdAtUtc' | 'fullName' | 'email' | 'attachments')}
+            onChange={(e) => setSortBy(e.target.value as 'createdAtUtc' | 'fullName' | 'email' | 'position' | 'attachments')}
           >
             <option value="createdAtUtc">{t('admin.contact.received')}</option>
             <option value="fullName">{t('admin.contact.from')}</option>
             <option value="email">{t('admin.email')}</option>
+            <option value="position">{t('admin.applications.position')}</option>
             <option value="attachments">{t('admin.contact.attachments')}</option>
           </select>
           <select value={sortDir} onChange={(e) => setSortDir(e.target.value as 'asc' | 'desc')}>
@@ -93,7 +121,7 @@ export function AdminContactListPage() {
                 <tr>
                   <th>{t('admin.contact.from')}</th>
                   <th>{t('admin.email')}</th>
-                  <th>{t('admin.contact.company')}</th>
+                  <th>{t('admin.applications.position')}</th>
                   <th>{t('admin.contact.attachments')}</th>
                   <th>{t('admin.contact.received')}</th>
                   <th />
@@ -104,18 +132,18 @@ export function AdminContactListPage() {
                   <tr key={m.id}>
                     <td>{m.fullName}</td>
                     <td>{m.email}</td>
-                    <td>{m.company || '—'}</td>
+                    <td>{m.position}</td>
                     <td>{m.attachmentCount}</td>
                     <td className="admin-muted admin-table__nowrap">{new Date(m.createdAtUtc).toLocaleString()}</td>
                     <td className="admin-table__actions">
                       <div className="admin-actions-inline">
-                        <Link className="admin-icon-link" to={`/admin/contact/${m.id}`} aria-label={t('admin.viewDetail')}>
+                        <Link className="admin-icon-link" to={`/admin/applications/${m.id}`} aria-label={t('admin.viewDetail')}>
                           <ExternalLink size={14} strokeWidth={2} />
                         </Link>
                       </div>
                       <AdminOverflowMenu
                         label={t('admin.viewDetail')}
-                        items={[{ key: 'detail', label: t('admin.viewDetail'), to: `/admin/contact/${m.id}` }]}
+                        items={[{ key: 'detail', label: t('admin.viewDetail'), to: `/admin/applications/${m.id}` }]}
                       />
                     </td>
                   </tr>

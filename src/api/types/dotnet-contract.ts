@@ -56,6 +56,25 @@ export interface ContactSubmitRequest {
   attachments?: ContactAttachmentInput[] | null
 }
 
+export interface ApplicationAttachmentInput {
+  fileName: string
+  contentType?: string | null
+  base64: string
+}
+
+export interface ApplicationSubmitRequest {
+  fullName: string
+  email: string
+  phone?: string | null
+  position: string
+  coverLetter?: string | null
+  attachments?: ApplicationAttachmentInput[] | null
+}
+
+export interface ApplicationPositionOption {
+  value: string
+}
+
 export interface NewsletterSubscribeRequest {
   email: string
   locale?: string | null

@@ -3,12 +3,16 @@ import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ArrowLeft, Download } from 'lucide-react'
 
-import { fetchAdminContactAttachmentBlob, fetchAdminContactMessage, type AdminContactMessageDetail } from '@/api/adminApi'
+import {
+  fetchAdminJobApplication,
+  fetchAdminJobApplicationAttachmentBlob,
+  type AdminJobApplicationDetail,
+} from '@/api/adminApi'
 
-export function AdminContactDetailPage() {
+export function AdminApplicationDetailPage() {
   const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
-  const [msg, setMsg] = useState<AdminContactMessageDetail | null>(null)
+  const [item, setItem] = useState<AdminJobApplicationDetail | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [blobUrls, setBlobUrls] = useState<Record<string, string>>({})
 
@@ -17,10 +21,10 @@ export function AdminContactDetailPage() {
       return
     }
     let cancelled = false
-    void fetchAdminContactMessage(id)
-      .then((m) => {
+    void fetchAdminJobApplication(id)
+      .then((r) => {
         if (!cancelled) {
-          setMsg(m)
+          setItem(r)
         }
       })
       .catch((e) => {
@@ -34,7 +38,7 @@ export function AdminContactDetailPage() {
   }, [id])
 
   useEffect(() => {
-    if (!msg?.id) {
+    if (!item?.id) {
       return
     }
     let alive = true
@@ -42,12 +46,12 @@ export function AdminContactDetailPage() {
     setBlobUrls({})
     void (async () => {
       const next: Record<string, string> = {}
-      for (const a of msg.attachments) {
+      for (const a of item.attachments) {
         if (!a.isImage) {
           continue
         }
         try {
-          const blob = await fetchAdminContactAttachmentBlob(msg.id, a.id)
+          const blob = await fetchAdminJobApplicationAttachmentBlob(item.id, a.id)
           const url = URL.createObjectURL(blob)
           objectUrls.push(url)
           if (!alive) {
@@ -58,7 +62,7 @@ export function AdminContactDetailPage() {
           }
           next[a.id] = url
         } catch {
-          /* preview yok */
+          // ignore preview errors
         }
       }
       if (!alive) {
@@ -75,37 +79,33 @@ export function AdminContactDetailPage() {
         URL.revokeObjectURL(u)
       }
     }
-  }, [msg])
+  }, [item])
 
   async function downloadAttachment(attachmentId: string, fileName: string) {
-    if (!msg) {
+    if (!item) {
       return
     }
-    try {
-      const blob = await fetchAdminContactAttachmentBlob(msg.id, attachmentId)
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = fileName
-      a.click()
-      URL.revokeObjectURL(url)
-    } catch {
-      /* noop */
-    }
+    const blob = await fetchAdminJobApplicationAttachmentBlob(item.id, attachmentId)
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = fileName
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   if (error) {
     return (
       <div className="admin-page">
         <p className="admin-alert admin-alert--error">{error}</p>
-        <Link className="admin-link" to="/admin/contact">
+        <Link className="admin-link" to="/admin/applications">
           {t('admin.backToList')}
         </Link>
       </div>
     )
   }
 
-  if (!msg) {
+  if (!item) {
     return (
       <div className="admin-page">
         <p className="admin-muted">{t('admin.loading')}</p>
@@ -116,8 +116,8 @@ export function AdminContactDetailPage() {
   return (
     <div className="admin-page">
       <div className="admin-page__head">
-        <h1 className="admin-page__title">{msg.fullName}</h1>
-        <Link className="admin-btn admin-btn--ghost" to="/admin/contact">
+        <h1 className="admin-page__title">{item.fullName}</h1>
+        <Link className="admin-btn admin-btn--ghost" to="/admin/applications">
           <ArrowLeft size={14} strokeWidth={2} />
           {t('admin.backToList')}
         </Link>
@@ -125,21 +125,22 @@ export function AdminContactDetailPage() {
       <div className="admin-card admin-card--flat">
         <dl className="admin-dl">
           <dt>{t('admin.email')}</dt>
-          <dd>{msg.email}</dd>
-          <dt>{t('admin.contact.company')}</dt>
-          <dd>{msg.company || '—'}</dd>
+          <dd>{item.email}</dd>
+          <dt>{t('admin.applications.phone')}</dt>
+          <dd>{item.phone || '—'}</dd>
+          <dt>{t('admin.applications.position')}</dt>
+          <dd>{item.position}</dd>
           <dt>{t('admin.contact.received')}</dt>
-          <dd>{new Date(msg.createdAtUtc).toLocaleString()}</dd>
+          <dd>{new Date(item.createdAtUtc).toLocaleString()}</dd>
         </dl>
-        <h2 className="admin-card__title">{t('admin.contact.message')}</h2>
-        <pre className="admin-pre">{msg.message}</pre>
+        <h2 className="admin-card__title">{t('admin.applications.coverLetter')}</h2>
+        <pre className="admin-pre">{item.coverLetter || '—'}</pre>
       </div>
-
-      {msg.attachments.length > 0 ? (
+      {item.attachments.length > 0 ? (
         <div className="admin-card admin-card--flat">
           <h2 className="admin-card__title">{t('admin.contact.attachments')}</h2>
           <div className="admin-attachment-grid">
-            {msg.attachments.map((a) => (
+            {item.attachments.map((a) => (
               <div key={a.id} className="admin-attachment-tile">
                 <div className="admin-attachment-tile__meta">
                   <span className="admin-attachment-name">{a.originalFileName}</span>

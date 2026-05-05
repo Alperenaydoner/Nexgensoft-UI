@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { ExternalLink } from 'lucide-react'
 
 import { fetchAdminLogs, type AdminHttpRequestLogListItem } from '@/api/adminApi'
 import type { PagedResult } from '@/api/types/dotnet-contract'
 
 import { AdminPagination } from '@/pages/admin/AdminPagination'
+import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
 
 type AppliedFilters = { pathContains: string; statusCode: string }
 
@@ -30,6 +32,8 @@ export function AdminLogsPage() {
       pageSize: 25,
       pathContains: applied.pathContains.trim() || undefined,
       statusCode: rawSc === '' || !Number.isFinite(parsedSc) ? undefined : parsedSc,
+      fromUtc: undefined,
+      toUtc: undefined,
     })
       .then((res) => {
         if (!cancelled) {
@@ -58,25 +62,28 @@ export function AdminLogsPage() {
 
   return (
     <div className="admin-page">
-      <h1 className="admin-page__title">{t('admin.nav.logs')}</h1>
-      <p className="admin-muted">{t('admin.logs.intro')}</p>
+      <div className="admin-page__head">
+        <div>
+          <h1 className="admin-page__title">{t('admin.nav.logs')}</h1>
+          <p className="admin-muted">{t('admin.logs.intro')}</p>
+        </div>
+      </div>
 
-      <div className="admin-filters">
-        <label className="admin-field">
-          <span>{t('admin.logs.pathContains')}</span>
+      <div className="admin-card admin-card--flat">
+        <h2 className="admin-card__title">{t('admin.filters.title')}</h2>
+        <div className="admin-users-filters">
           <input
             value={pathDraft}
             onChange={(e) => setPathDraft(e.target.value)}
             placeholder="/api/v1/contact"
           />
-        </label>
-        <label className="admin-field">
-          <span>{t('admin.logs.statusCode')}</span>
           <input value={statusDraft} onChange={(e) => setStatusDraft(e.target.value)} placeholder="200" />
-        </label>
-        <button type="button" className="admin-btn admin-btn--primary" onClick={applyFilters} disabled={busy}>
-          {t('admin.logs.apply')}
-        </button>
+          <div className="admin-filters__actions">
+            <button type="button" className="admin-btn admin-btn--primary" onClick={applyFilters} disabled={busy}>
+              {t('admin.logs.apply')}
+            </button>
+          </div>
+        </div>
       </div>
 
       {error ? <p className="admin-alert admin-alert--error">{error}</p> : null}
@@ -111,10 +118,16 @@ export function AdminLogsPage() {
                     </td>
                     <td>{row.durationMs} ms</td>
                     <td className="admin-muted">{row.userEmail || '—'}</td>
-                    <td>
-                      <Link className="admin-link" to={`/admin/logs/${row.id}`}>
-                        {t('admin.viewDetail')}
-                      </Link>
+                    <td className="admin-table__actions">
+                      <div className="admin-actions-inline">
+                        <Link className="admin-icon-link" to={`/admin/logs/${row.id}`} aria-label={t('admin.viewDetail')}>
+                          <ExternalLink size={14} strokeWidth={2} />
+                        </Link>
+                      </div>
+                      <AdminOverflowMenu
+                        label={t('admin.viewDetail')}
+                        items={[{ key: 'detail', label: t('admin.viewDetail'), to: `/admin/logs/${row.id}` }]}
+                      />
                     </td>
                   </tr>
                 ))}

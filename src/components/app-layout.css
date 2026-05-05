@@ -49,6 +49,9 @@
 }
 
 .nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.45rem 0.95rem;
   border-radius: var(--nx-radius-pill);
   font-size: 0.9rem;
@@ -57,6 +60,10 @@
   transition:
     color 0.2s ease,
     background 0.2s ease;
+}
+
+.nav__link svg {
+  opacity: 0.88;
 }
 
 .nav__link:hover {
@@ -74,6 +81,12 @@
   align-items: center;
   gap: 0.65rem;
   justify-self: end;
+}
+
+.topbar__divider {
+  width: 1px;
+  height: 24px;
+  background: var(--nx-border);
 }
 
 .btn-header-ghost {
@@ -98,35 +111,32 @@
 }
 
 .lang-switch {
-  display: flex;
-  gap: 0.2rem;
-  padding: 0.15rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 34px;
+  padding: 0.25rem 0.55rem;
   border-radius: var(--nx-radius-pill);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--nx-border);
 }
 
-.lang-switch__btn {
+.lang-switch select {
+  appearance: none;
   border: none;
   background: transparent;
-  color: var(--nx-muted);
-  padding: 0.35rem 0.55rem;
-  border-radius: var(--nx-radius-pill);
-  font-size: 0.75rem;
+  color: var(--nx-text);
+  padding: 0.2rem 1rem 0.2rem 0.05rem;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
-  transition:
-    color 0.2s ease,
-    background 0.2s ease;
+  outline: none;
+  line-height: 1;
 }
 
-.lang-switch__btn:hover {
-  color: var(--nx-text);
-}
-
-.lang-switch__btn.is-active {
-  color: var(--nx-bg);
-  background: var(--nx-accent);
+.lang-switch select option {
+  background: #0b1220;
+  color: #e2e8f0;
 }
 
 .main {
@@ -183,6 +193,11 @@
   .topbar__actions {
     grid-column: 2;
     grid-row: 1;
+    gap: 0.45rem;
+  }
+
+  .topbar__divider {
+    display: none;
   }
 
   .nav--main {
@@ -197,5 +212,42 @@
 
   .nav--main::-webkit-scrollbar {
     display: none;
+  }
+
+  .btn-header-ghost {
+    padding-inline: 0.75rem;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .topbar {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .brand,
+  .topbar__actions,
+  .nav--main {
+    grid-column: 1;
+  }
+
+  .topbar__actions {
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  .lang-switch {
+    min-height: 32px;
+    padding-inline: 0.45rem;
+  }
+
+  .lang-switch select {
+    font-size: 0.78rem;
+    padding-right: 0.55rem;
+  }
+
+  .nav--main {
+    grid-row: 3;
   }
 }

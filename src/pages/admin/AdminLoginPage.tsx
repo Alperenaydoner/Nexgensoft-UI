@@ -2,8 +2,14 @@ import { FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { Eye, EyeOff } from 'lucide-react'
 
-import { getAdminAccessToken, setAdminAccessToken } from '@/admin/authStorage'
+import {
+  getAdminAccessToken,
+  getAdminLoginRememberPreference,
+  setAdminAccessToken,
+  setAdminLoginRememberPreference,
+} from '@/admin/authStorage'
 import { ApiError } from '@/api/httpClient'
 import { fetchCurrentUser, loginAdmin } from '@/api/authApi'
 
@@ -14,9 +20,17 @@ export function AdminLoginPage() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(true)
   const [busy, setBusy] = useState(false)
 
   useEffect(() => {
+    const pref = getAdminLoginRememberPreference()
+    setRememberMe(pref.rememberMe)
+    if (pref.email) {
+      setEmail(pref.email)
+    }
+
     const token = getAdminAccessToken()
     if (!token) {
       return
@@ -41,7 +55,8 @@ export function AdminLoginPage() {
         toast.error(t('admin.forbidden'))
         return
       }
-      setAdminAccessToken(res.accessToken)
+      setAdminAccessToken(res.accessToken, rememberMe)
+      setAdminLoginRememberPreference(email.trim(), rememberMe)
       toast.success(t('admin.signedIn'))
       navigate('/admin', { replace: true })
     } catch (err) {
@@ -76,16 +91,36 @@ export function AdminLoginPage() {
             </div>
             <div className="admin-field">
               <label htmlFor="admin-password">{t('admin.password')}</label>
-              <input
-                id="admin-password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(ev) => setPassword(ev.target.value)}
-                required
-                minLength={8}
-              />
+              <div className="admin-password-field">
+                <input
+                  id="admin-password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(ev) => setPassword(ev.target.value)}
+                  required
+                  minLength={8}
+                />
+                <button
+                  type="button"
+                  className="admin-password-toggle"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? t('admin.hidePassword') : t('admin.showPassword')}
+                >
+                  {showPassword ? <EyeOff size={15} strokeWidth={2} /> : <Eye size={15} strokeWidth={2} />}
+                </button>
+              </div>
+            </div>
+            <div className="admin-login-options">
+              <label className="admin-checkbox">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(ev) => setRememberMe(ev.target.checked)}
+                />
+                <span>{t('admin.rememberMe')}</span>
+              </label>
             </div>
             <button className="admin-btn admin-btn--primary" type="submit" disabled={busy}>
               {busy ? t('admin.signingIn') : t('admin.signIn')}

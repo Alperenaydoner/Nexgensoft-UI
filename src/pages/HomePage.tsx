@@ -1,6 +1,7 @@
 import type { TFunction } from 'i18next'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { ArrowRight, Rocket } from 'lucide-react'
 
 import '@/pages/pages.css'
 
@@ -25,6 +26,7 @@ export function HomePage() {
       <div className="hero-premium__inner">
         <div className="hero-badge">
           <span className="hero-badge__dot" aria-hidden="true" />
+          <Rocket size={14} strokeWidth={2} />
           <span>{t('home.badge')}</span>
         </div>
         <h1 className="hero-premium__title">
@@ -38,6 +40,7 @@ export function HomePage() {
         <div className="hero-premium__actions">
           <Link className="btn-primary" to="/services">
             {t('home.ctaExplore')}
+            <ArrowRight size={14} strokeWidth={2} />
           </Link>
           <Link className="btn-secondary" to="/contact">
             {t('home.ctaStart')}

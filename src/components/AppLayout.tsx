@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { BriefcaseBusiness, CircleUserRound, House, Mail, Sparkles } from 'lucide-react'
 
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
@@ -17,23 +18,29 @@ export function AppLayout() {
         </NavLink>
         <nav className="nav nav--main" aria-label={t('aria.mainNavigation')}>
           <NavLink to="/" className="nav__link" end>
+            <House size={14} strokeWidth={2} />
             {t('nav.home')}
           </NavLink>
           <NavLink to="/services" className="nav__link">
+            <Sparkles size={14} strokeWidth={2} />
             {t('nav.services')}
           </NavLink>
           <NavLink to="/about" className="nav__link">
+            <CircleUserRound size={14} strokeWidth={2} />
             {t('nav.about')}
           </NavLink>
           <NavLink to="/basvuru" className="nav__link">
+            <BriefcaseBusiness size={14} strokeWidth={2} />
             {t('nav.application')}
           </NavLink>
           <NavLink to="/contact" className="nav__link">
+            <Mail size={14} strokeWidth={2} />
             {t('nav.contact')}
           </NavLink>
         </nav>
         <div className="topbar__actions">
           <LanguageSwitcher />
+          <span className="topbar__divider" aria-hidden="true" />
           <NavLink to="/contact" className="btn-header-ghost">
             {t('nav.getInTouch')}
           </NavLink>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { ArrowLeft } from 'lucide-react'
 
 import { fetchAdminLogDetail, type AdminHttpRequestLogDetail } from '@/api/adminApi'
 
@@ -55,6 +56,7 @@ export function AdminLogDetailPage() {
       <div className="admin-page__head">
         <h1 className="admin-page__title">{t('admin.logs.detailTitle')}</h1>
         <Link className="admin-btn admin-btn--ghost" to="/admin/logs">
+          <ArrowLeft size={14} strokeWidth={2} />
           {t('admin.backToList')}
         </Link>
       </div>

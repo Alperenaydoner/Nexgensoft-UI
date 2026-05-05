@@ -91,6 +91,13 @@
     "success": "Mesajınız alındı.",
     "error": "Gönderilemedi. Lütfen tekrar deneyin.",
     "precheckHint": "Ön analiz talebinizi mesajınıza yazabilirsiniz.",
+    "inquiryType": "Talep tipi",
+    "inquiryTypes": {
+      "general": "Genel bilgi",
+      "partnership": "İş birliği",
+      "support": "Teknik destek",
+      "sales": "Satış / teklif"
+    },
     "applicationLink": "Başvuru sayfasına git",
     "toastSuccess": "Teşekkürler! Mesajınız bize ulaştı.",
     "toastServerError": "Şu an kaydedemedik. Biraz sonra tekrar dener misiniz?",
@@ -110,9 +117,28 @@
   },
   "application": {
     "title": "Başvuru",
-    "intro": "Staj, işe alım ve iş ortaklığı başvurularınız için önce haritadaki konumu inceleyebilir; ardından iletişim formu üzerinden bize ulaşabilirsiniz.",
+    "intro": "Açık pozisyonlara başvuru için lütfen aşağıdaki formu doldurun.",
+    "phone": "Telefon",
+    "position": "Pozisyon",
+    "coverLetter": "Ön yazı (opsiyonel)",
+    "cvFiles": "CV ve ek dosyalar",
+    "dropzoneHint": "Dosyaları buraya bırakın veya seçmek için tıklayın",
+    "send": "Başvuru gönder",
+    "sending": "Başvuru gönderiliyor…",
+    "toastSuccess": "Başvurunuz alındı. Teşekkür ederiz.",
+    "toastServerError": "Başvuruyu şu an kaydedemedik. Lütfen tekrar deneyin.",
+    "toastRequestError": "Sunucuya erişilemedi. Lütfen tekrar deneyin.",
+    "toastNetworkError": "Ağ hatası oluştu. Lütfen tekrar deneyin.",
     "mapTitle": "İstanbul Kadıköy — konum",
-    "ctaContact": "İletişim formuna git"
+    "ctaContact": "İletişim formuna git",
+    "positions": {
+      "backend": "Backend Developer",
+      "frontend": "Frontend Developer",
+      "fullstack": "Fullstack Developer",
+      "mobile": "Mobile Developer",
+      "devops": "DevOps Engineer",
+      "intern": "Stajyer"
+    }
   },
   "admin": {
     "title": "Yönetim",
@@ -136,12 +162,21 @@
     "pingFail": "API yanıtı alınamadı.",
     "forbidden": "Bu alan yalnızca Admin rolü içindir.",
     "invalidCredentials": "Geçersiz e-posta veya parola.",
+    "rememberMe": "Beni hatırla",
+    "showPassword": "Parolayı göster",
+    "hidePassword": "Parolayı gizle",
     "loading": "Yükleniyor…",
+    "search": {
+      "title": "Hızlı arama",
+      "placeholder": "Kullanıcı, rol, mesaj, başvuru, locale ara...",
+      "close": "Aramayı kapat"
+    },
     "nav": {
       "dashboard": "Özet",
       "users": "Kullanıcılar",
       "roles": "Roller",
       "contact": "İletişim",
+      "applications": "İş başvuruları",
       "logs": "İstek günlüğü",
       "content": "Site içeriği"
     },
@@ -150,6 +185,8 @@
       "roles": "Roller",
       "contactMessages": "İletişim mesajları",
       "contactAttachments": "İletişim ekleri",
+      "jobApplications": "İş başvuruları",
+      "jobApplicationAttachments": "Başvuru ekleri",
       "httpLogs": "HTTP günlük kayıtları",
       "contentBundles": "İçerik paketi (locale)",
       "localizedStrings": "Yerelleştirilmiş metin"
@@ -166,7 +203,8 @@
       "no": "Hayır",
       "created": "Oluşturulma",
       "normalizedEmail": "Normalize e-posta",
-      "profile": "Profil"
+      "profile": "Profil",
+      "newPasswordOptional": "Yeni parola (opsiyonel)"
     },
     "rolesTable": {
       "name": "Rol adı",
@@ -180,7 +218,17 @@
       "attachments": "Ek sayısı",
       "received": "Alındı",
       "message": "Mesaj",
-      "download": "İndir / aç"
+      "download": "İndir / aç",
+      "searchPlaceholder": "Ad, email, şirket, mesaj ara",
+      "allRecords": "Tüm kayıtlar",
+      "withAttachments": "Ekli olanlar",
+      "withoutAttachments": "Eksiz olanlar"
+    },
+    "applications": {
+      "searchPlaceholder": "Ad, email, telefon veya pozisyon ara",
+      "position": "Pozisyon",
+      "phone": "Telefon",
+      "coverLetter": "Ön yazı"
     },
     "logs": {
       "intro": "API ve denetim istek günlükleri.",
@@ -211,7 +259,72 @@
       "strings": "Metin satırı (toplam)",
       "locale": "Dil",
       "hasBundle": "Paket var",
-      "stringCount": "Metin sayısı"
+      "stringCount": "Metin sayısı",
+      "detailEdit": "Detay / düzenle",
+      "searchLocale": "Locale ara"
+    },
+    "contentEditor": {
+      "title": "Key-Value düzenleyici",
+      "value": "Değer",
+      "search": "Key veya değer ara",
+      "newRow": "Yeni satır",
+      "keyExample": "home.heroTitle",
+      "saveAll": "Toplu kaydet",
+      "saving": "Kaydediliyor...",
+      "saved": "Tüm değişiklikler kaydedildi.",
+      "auditTitle": "Temel audit / versiyon izi",
+      "localeTitle": "İçerik locale: {{locale}}",
+      "validation": {
+        "emptyKey": "Boş key olamaz.",
+        "duplicateKey": "Tekrar eden key var: {{key}}"
+      }
+    },
+    "empty": {
+      "noResults": "Kayıt bulunamadı.",
+      "noAudit": "Henüz audit kaydı yok."
+    },
+    "actions": {
+      "create": "Oluştur",
+      "update": "Güncelle",
+      "delete": "Sil",
+      "save": "Kaydet",
+      "cancel": "Vazgeç",
+      "edit": "Düzenle",
+      "closeEdit": "Düzenlemeyi kapat",
+      "failed": "İşlem başarısız.",
+      "bulkDeleteSelected": "Seçilenleri sil ({{count}})",
+      "bulkDeleteTitle": "Toplu silme onayı",
+      "bulkDeleteMessage": "{{count}} kullanıcı silinsin mi?"
+    },
+    "filters": {
+      "title": "Filtreler",
+      "allStatuses": "Tüm durumlar",
+      "allRoles": "Tüm roller",
+      "allPositions": "Tum pozisyonlar",
+      "sortDesc": "Z-A / Yeni-Eski",
+      "sortAsc": "A-Z / Eski-Yeni"
+    },
+    "usersCrud": {
+      "newUserTitle": "Yeni kullanıcı",
+      "searchPlaceholder": "Email / ad / soyad ara",
+      "emailPasswordRequired": "Email ve parola zorunlu.",
+      "created": "Kullanıcı oluşturuldu.",
+      "updated": "Kullanıcı güncellendi.",
+      "deleted": "Kullanıcı silindi.",
+      "bulkDeleted": "{{count}} kullanıcı silindi.",
+      "deleteTitle": "Kullanıcı silme onayı",
+      "deleteMessage": "{{email}} kullanıcısı silinsin mi?"
+    },
+    "rolesCrud": {
+      "newRoleTitle": "Yeni rol",
+      "roleName": "Rol adı",
+      "searchPlaceholder": "Rol ara",
+      "created": "Rol oluşturuldu.",
+      "updated": "Rol güncellendi.",
+      "deleted": "Rol silindi.",
+      "editTitle": "Rol adını güncelle",
+      "deleteTitle": "Rol silme onayı",
+      "deleteMessage": "{{name}} rolü silinsin mi?"
     }
   },
   "brand": {

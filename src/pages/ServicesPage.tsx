@@ -1,9 +1,11 @@
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
+import { Cpu, LucideIcon, ShieldCheck, Workflow } from 'lucide-react'
 
 import '@/pages/pages.css'
 
 type ServiceItem = { title: string; body: string }
+const serviceIcons: LucideIcon[] = [Workflow, ShieldCheck, Cpu]
 
 function readItems(t: TFunction): ServiceItem[] {
   const raw = t('services.items', { returnObjects: true })
@@ -23,12 +25,18 @@ export function ServicesPage() {
       <h1>{t('services.pageTitle')}</h1>
       <p className="lead">{t('services.pageIntro')}</p>
       <ul className="service-grid">
-        {items.map((item) => (
-          <li key={item.title} className="service-card">
-            <h2 className="service-card__title">{item.title}</h2>
-            <p className="service-card__body">{item.body}</p>
-          </li>
-        ))}
+        {items.map((item, idx) => {
+          const Icon = serviceIcons[idx % serviceIcons.length]
+          return (
+            <li key={item.title} className="service-card">
+              <h2 className="service-card__title">
+                <Icon size={16} strokeWidth={2} />
+                <span>{item.title}</span>
+              </h2>
+              <p className="service-card__body">{item.body}</p>
+            </li>
+          )
+        })}
       </ul>
     </section>
   )

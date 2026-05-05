@@ -106,8 +106,11 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
 
   if (!res.ok) {
     const problem = isJson && payload && typeof payload === 'object' ? (payload as ProblemDetails) : undefined
-    const msg =
-      problem?.title ?? problem?.detail ?? (typeof payload === 'string' ? payload : res.statusText)
+    const payloadMessage =
+      isJson && payload && typeof payload === 'object' && 'message' in payload
+        ? String((payload as { message?: unknown }).message ?? '')
+        : ''
+    const msg = (problem?.title ?? problem?.detail ?? payloadMessage) || (typeof payload === 'string' ? payload : res.statusText)
     throw new ApiError(msg || 'Request failed', res.status, problem)
   }
 

@@ -1,14 +1,25 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
+import { ArrowLeft, PencilLine, Trash2 } from 'lucide-react'
 
-import { fetchAdminUser, type AdminUserDetail } from '@/api/adminApi'
+import { deleteAdminUser, fetchAdminRoleOptions, fetchAdminUser, updateAdminUser, type AdminUserDetail } from '@/api/adminApi'
+import { AdminConfirmDialog } from '@/pages/admin/AdminDialogs'
 
 export function AdminUserDetailPage() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const [user, setUser] = useState<AdminUserDetail | null>(null)
+  const [roles, setRoles] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [editing, setEditing] = useState(false)
+  const [displayName, setDisplayName] = useState('')
+  const [isActive, setIsActive] = useState(true)
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([])
+  const [password, setPassword] = useState('')
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   useEffect(() => {
     if (!id) {
@@ -19,6 +30,9 @@ export function AdminUserDetailPage() {
       .then((u) => {
         if (!cancelled) {
           setUser(u)
+          setDisplayName(u.displayName)
+          setIsActive(u.isActive)
+          setSelectedRoles(u.roles)
         }
       })
       .catch((e) => {
@@ -30,6 +44,20 @@ export function AdminUserDetailPage() {
       cancelled = true
     }
   }, [id])
+
+  useEffect(() => {
+    let cancelled = false
+    void fetchAdminRoleOptions()
+      .then((r) => {
+        if (!cancelled) {
+          setRoles(r.items)
+        }
+      })
+      .catch(() => undefined)
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   if (error) {
     return (
@@ -54,9 +82,24 @@ export function AdminUserDetailPage() {
     <div className="admin-page">
       <div className="admin-page__head">
         <h1 className="admin-page__title">{user.email}</h1>
-        <Link className="admin-btn admin-btn--ghost" to="/admin/users">
-          {t('admin.backToList')}
-        </Link>
+        <div className="admin-row">
+          <button type="button" className="admin-btn admin-btn--ghost" onClick={() => setEditing((v) => !v)}>
+            <PencilLine size={14} strokeWidth={2} />
+            {editing ? t('admin.actions.closeEdit') : t('admin.actions.edit')}
+          </button>
+          <button
+            type="button"
+            className="admin-btn admin-btn--danger"
+            onClick={() => setShowDeleteConfirm(true)}
+          >
+            <Trash2 size={14} strokeWidth={2} />
+            {t('admin.actions.delete')}
+          </button>
+          <Link className="admin-btn admin-btn--ghost" to="/admin/users">
+            <ArrowLeft size={14} strokeWidth={2} />
+            {t('admin.backToList')}
+          </Link>
+        </div>
       </div>
       <div className="admin-detail-grid">
         <div className="admin-card admin-card--flat">
@@ -76,7 +119,84 @@ export function AdminUserDetailPage() {
             <dd>{new Date(user.createdAtUtc).toLocaleString()}</dd>
           </dl>
         </div>
+        {editing ? (
+          <div className="admin-card admin-card--flat">
+            <h2 className="admin-card__title">{t('admin.actions.update')}</h2>
+            <div className="admin-users-create">
+              <input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder={t('admin.users.displayName')} />
+              <select value={isActive ? 'true' : 'false'} onChange={(e) => setIsActive(e.target.value === 'true')}>
+                <option value="true">{t('admin.users.yes')}</option>
+                <option value="false">{t('admin.users.no')}</option>
+              </select>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder={t('admin.users.newPasswordOptional')}
+              />
+              <select
+                multiple
+                value={selectedRoles}
+                onChange={(e) => setSelectedRoles(Array.from(e.target.selectedOptions).map((x) => x.value))}
+              >
+                {roles.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="admin-btn admin-btn--primary"
+                onClick={async () => {
+                  if (!id || !user) {
+                    return
+                  }
+                  try {
+                    const updated = await updateAdminUser(id, {
+                      email: user.email,
+                      displayName: displayName.trim() || user.displayName,
+                      isActive,
+                      password: password.trim() || undefined,
+                      roles: selectedRoles,
+                    })
+                    setUser(updated)
+                    setPassword('')
+                    setEditing(false)
+                    toast.success(t('admin.usersCrud.updated'))
+                  } catch (e) {
+                    toast.error(e instanceof Error ? e.message : t('admin.actions.failed'))
+                  }
+                }}
+              >
+                {t('admin.actions.save')}
+              </button>
+            </div>
+          </div>
+        ) : null}
       </div>
+      <AdminConfirmDialog
+        open={showDeleteConfirm}
+        title={t('admin.usersCrud.deleteTitle')}
+        message={t('admin.usersCrud.deleteMessage', { email: user.email })}
+        confirmText={t('admin.actions.delete')}
+        cancelText={t('admin.actions.cancel')}
+        onCancel={() => setShowDeleteConfirm(false)}
+        onConfirm={async () => {
+          if (!id) {
+            return
+          }
+          try {
+            await deleteAdminUser(id)
+            toast.success(t('admin.usersCrud.deleted'))
+            navigate('/admin/users')
+          } catch (e) {
+            toast.error(e instanceof Error ? e.message : t('admin.actions.failed'))
+          } finally {
+            setShowDeleteConfirm(false)
+          }
+        }}
+      />
     </div>
   )
 }
