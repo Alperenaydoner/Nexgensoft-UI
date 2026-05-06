@@ -12,6 +12,7 @@ import {
 } from '@/api/applicationApi'
 import { FileDropzone } from '@/components/FileDropzone'
 import { ApiError } from '@/api/httpClient'
+import type { ApplicationSubmitRequest } from '@/api/types/dotnet-contract'
 import { Select } from '@/components/ui/Select'
 import { filesToBase64Attachments } from '@/utils/filesToBase64Attachments'
 
@@ -87,14 +88,7 @@ export function ApplicationPage() {
   const mapEmbedSrc = MAPBOX_MAP_EMBED_SRC ?? OSM_MAP_EMBED_SRC
   const mapClassName = MAPBOX_MAP_EMBED_SRC ? 'map-frame map-frame--provider' : 'map-frame map-frame--dark'
 
-  async function submitWithRetry(payload: {
-    fullName: string
-    email: string
-    phone?: string
-    position: string
-    coverLetter?: string
-    attachments?: Awaited<ReturnType<typeof filesToBase64Attachments>>
-  }) {
+  async function submitWithRetry(payload: ApplicationSubmitRequest) {
     let attempt = 0
     while (true) {
       try {
