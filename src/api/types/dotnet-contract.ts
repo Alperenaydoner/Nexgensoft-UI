@@ -67,7 +67,7 @@ export interface ApplicationSubmitRequest {
   email: string
   phone?: string | null
   position: string
-  coverLetter?: string | null
+  coverLetter: string
   attachments?: ApplicationAttachmentInput[] | null
 }
 

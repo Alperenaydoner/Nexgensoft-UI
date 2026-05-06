@@ -46,9 +46,14 @@ export function ApplicationPage() {
   const [editEmail, setEditEmail] = useState('')
   const [editPhone, setEditPhone] = useState('')
   const [editCoverLetter, setEditCoverLetter] = useState('')
+  const minFiles = 3
   const maxFiles = 10
   const maxSubmitRetries = 1
-  const allowedExt = useMemo(() => '.pdf,.png,.jpg,.jpeg,.webp,.gif,.doc,.docx,.xls,.xlsx,.txt,.zip', [])
+  const allowedExt = useMemo(
+    () =>
+      '.pdf,.png,.jpg,.jpeg,.webp,.gif,.doc,.docx,.xls,.xlsx,.txt,.zip,.mp4,.webm,.mov,.m4v,.mpeg,.mpg',
+    [],
+  )
 
   useEffect(() => {
     let cancelled = false
@@ -104,13 +109,20 @@ export function ApplicationPage() {
     }
   }
 
-  function validate(fullName: string, email: string, selected: File[]): boolean {
-    const next = validateFields(fullName, email, newPosition, selected)
+  function validate(fullName: string, email: string, coverLetter: string, selected: File[]): boolean {
+    const next = validateFields(fullName, email, newPosition, coverLetter, selected, { requireMinFileCount: true })
     setNewFieldErrors(next)
     return Object.keys(next).length === 0
   }
 
-  function validateFields(fullName: string, email: string, selectedPosition: string, selected: File[]): Record<string, string> {
+  function validateFields(
+    fullName: string,
+    email: string,
+    selectedPosition: string,
+    coverLetter: string,
+    selected: File[],
+    filePolicy: { requireMinFileCount: boolean },
+  ): Record<string, string> {
     const next: Record<string, string> = {}
     const lowerName = fullName.trim().toLowerCase()
     const localPart = email.trim().split('@')[0]?.toLowerCase() ?? ''
@@ -136,8 +148,20 @@ export function ApplicationPage() {
     if (!selectedPosition.trim()) {
       next.position = t('contact.validation.required')
     }
+    const letter = coverLetter.trim()
+    if (!letter) {
+      next.coverLetter = t('application.validation.coverLetterRequired')
+    } else if (letter.length < 10) {
+      next.coverLetter = t('application.validation.coverLetterMin')
+    }
     if (selected.length > maxFiles) {
       next.files = t('contact.validation.filesMax', { count: maxFiles })
+    } else if (filePolicy.requireMinFileCount) {
+      if (selected.length < minFiles) {
+        next.files = t('application.validation.filesMin', { count: minFiles })
+      }
+    } else if (selected.length > 0 && selected.length < minFiles) {
+      next.files = t('application.validation.filesMin', { count: minFiles })
     }
     return next
   }
@@ -151,25 +175,23 @@ export function ApplicationPage() {
     const phone = String(fd.get('phone') ?? '').trim()
     const coverLetter = String(fd.get('coverLetter') ?? '').trim()
 
-    if (!validate(fullName, email, newFiles)) {
+    if (!validate(fullName, email, coverLetter, newFiles)) {
       return
     }
 
     setLoadingCreate(true)
     try {
-      const attachments = newFiles.length > 0
-        ? await filesToBase64Attachments(newFiles, (key, progress) =>
-            setNewUploadProgress((prev) => ({ ...prev, [key]: progress })),
-            1,
-          )
-        : undefined
+      const attachments = await filesToBase64Attachments(newFiles, (key, progress) =>
+        setNewUploadProgress((prev) => ({ ...prev, [key]: progress })),
+        1,
+      )
       const res = await submitWithRetry({
         fullName,
         email,
         phone: phone || undefined,
         position: newPosition,
-        coverLetter: coverLetter || undefined,
-        attachments: attachments && attachments.length > 0 ? attachments : undefined,
+        coverLetter: coverLetter.trim(),
+        attachments,
       })
       if (!res.success) {
         toast.error(t('application.toastServerError'))
@@ -235,7 +257,9 @@ export function ApplicationPage() {
     const phone = editPhone.trim()
     const coverLetter = editCoverLetter.trim()
 
-    const nextErrors = validateFields(fullName, email, editPosition, editFiles)
+    const nextErrors = validateFields(fullName, email, editPosition, coverLetter, editFiles, {
+      requireMinFileCount: false,
+    })
     if (!applicationCode) {
       nextErrors.applicationCode = t('contact.validation.required')
     }
@@ -246,20 +270,21 @@ export function ApplicationPage() {
 
     setLoadingUpdate(true)
     try {
-      const attachments = editFiles.length > 0
-        ? await filesToBase64Attachments(editFiles, (key, progress) =>
-            setEditUploadProgress((prev) => ({ ...prev, [key]: progress })),
-            1,
-          )
-        : undefined
+      const attachments =
+        editFiles.length > 0
+          ? await filesToBase64Attachments(editFiles, (key, progress) =>
+              setEditUploadProgress((prev) => ({ ...prev, [key]: progress })),
+              1,
+            )
+          : undefined
 
       const res = await updateApplicationByCode(applicationCode, {
         fullName,
         email,
         phone: phone || null,
         position: editPosition,
-        coverLetter: coverLetter || null,
-        attachments: attachments && attachments.length > 0 ? attachments : undefined,
+        coverLetter: coverLetter.trim(),
+        attachments,
       })
 
       if (!res.success) {
@@ -328,7 +353,16 @@ export function ApplicationPage() {
           </label>
           <label>
             {t('application.coverLetter')}
-            <textarea name="coverLetter" rows={5} />
+            <textarea
+              name="coverLetter"
+              rows={5}
+              required
+              minLength={10}
+              aria-invalid={newFieldErrors.coverLetter ? true : undefined}
+            />
+            {newFieldErrors.coverLetter ? (
+              <span className="form-field-error">{newFieldErrors.coverLetter}</span>
+            ) : null}
           </label>
           <FileDropzone
             files={newFiles}
@@ -425,10 +459,16 @@ export function ApplicationPage() {
             <textarea
               name="coverLetter"
               rows={5}
+              required
+              minLength={10}
               value={editCoverLetter}
               onChange={(e) => setEditCoverLetter(e.target.value)}
               disabled={!loadedCode}
+              aria-invalid={editFieldErrors.coverLetter ? true : undefined}
             />
+            {editFieldErrors.coverLetter ? (
+              <span className="form-field-error">{editFieldErrors.coverLetter}</span>
+            ) : null}
           </label>
           <FileDropzone
             files={editFiles}

@@ -123,11 +123,11 @@
     "applicationCode": "Application code",
     "phone": "Phone",
     "position": "Position",
-    "coverLetter": "Cover letter (optional)",
-    "cvFiles": "CV and supporting files",
+    "coverLetter": "Cover letter",
+    "cvFiles": "CV and attachments (video allowed)",
     "editFiles": "New file attachments",
-    "dropzoneHint": "Drop files here or click to choose",
-    "editDropzoneHint": "You can attach new files only. Existing files are hidden for security.",
+    "dropzoneHint": "At least 3 files (PDF, Office, images, or video). Up to 50 MB per file. Drop here or click to choose.",
+    "editDropzoneHint": "When adding files, select at least 3. Video is allowed. Existing files stay hidden.",
     "editAttachmentPrivacy": "Existing attachments cannot be viewed or deleted for security. You can only add new files.",
     "send": "Submit application",
     "sending": "Submitting application…",
@@ -147,7 +147,10 @@
     "validation": {
       "fullName": "Please enter name and surname.",
       "fullNameMeaningful": "Please enter a real and meaningful full name.",
-      "emailMeaningful": "Please enter a real email address."
+      "emailMeaningful": "Please enter a real email address.",
+      "coverLetterRequired": "Please fill in the cover letter.",
+      "coverLetterMin": "Cover letter must be at least 10 characters.",
+      "filesMin": "Please add at least {{count}} files."
     },
     "mapTitle": "Istanbul, Kadıköy — location",
     "ctaContact": "Go to contact form",

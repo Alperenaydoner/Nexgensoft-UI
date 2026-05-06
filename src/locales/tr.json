@@ -123,11 +123,11 @@
     "applicationCode": "Başvuru kodu",
     "phone": "Telefon",
     "position": "Pozisyon",
-    "coverLetter": "Ön yazı (opsiyonel)",
-    "cvFiles": "CV ve ek dosyalar",
+    "coverLetter": "Ön yazı",
+    "cvFiles": "CV ve ek dosyalar (video dahil)",
     "editFiles": "Yeni dosya ekleri",
-    "dropzoneHint": "Dosyaları buraya bırakın veya seçmek için tıklayın",
-    "editDropzoneHint": "Yeni dosyalar ekleyebilirsiniz. Mevcut dosyalar güvenlik nedeniyle görünmez.",
+    "dropzoneHint": "En az 3 dosya (PDF, Office, görsel veya video). Dosya başına en fazla 50 MB. Sürükleyin veya tıklayın.",
+    "editDropzoneHint": "Yeni dosya eklerken en az 3 dosya seçin. Video yüklenebilir. Mevcut dosyalar görünmez.",
     "editAttachmentPrivacy": "Mevcut ekler güvenlik nedeniyle görüntülenemez veya silinemez. Sadece yeni dosya ekleyebilirsiniz.",
     "send": "Başvuru gönder",
     "sending": "Başvuru gönderiliyor…",
@@ -147,7 +147,10 @@
     "validation": {
       "fullName": "Ad ve soyad girin.",
       "fullNameMeaningful": "Lütfen gerçek ve anlamlı bir ad soyad girin.",
-      "emailMeaningful": "Lütfen gerçek bir e-posta adresi girin."
+      "emailMeaningful": "Lütfen gerçek bir e-posta adresi girin.",
+      "coverLetterRequired": "Ön yazıyı doldurun.",
+      "coverLetterMin": "Ön yazı en az 10 karakter olmalıdır.",
+      "filesMin": "En az {{count}} dosya ekleyin."
     },
     "mapTitle": "İstanbul Kadıköy — konum",
     "ctaContact": "İletişim formuna git",
