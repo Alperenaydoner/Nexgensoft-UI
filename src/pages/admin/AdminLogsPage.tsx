@@ -9,13 +9,14 @@ import type { PagedResult } from '@/api/types/dotnet-contract'
 import { AdminPagination } from '@/pages/admin/AdminPagination'
 import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
 
-type AppliedFilters = { pathContains: string; statusCode: string }
+type AppliedFilters = { pathContains: string; statusCode: string; httpMethod: string }
 
 export function AdminLogsPage() {
   const { t } = useTranslation()
   const [pathDraft, setPathDraft] = useState('')
   const [statusDraft, setStatusDraft] = useState('')
-  const [applied, setApplied] = useState<AppliedFilters>({ pathContains: '', statusCode: '' })
+  const [methodDraft, setMethodDraft] = useState('')
+  const [applied, setApplied] = useState<AppliedFilters>({ pathContains: '', statusCode: '', httpMethod: '' })
   const [page, setPage] = useState(1)
   const [data, setData] = useState<PagedResult<AdminHttpRequestLogListItem> | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -32,6 +33,7 @@ export function AdminLogsPage() {
       pageSize: 25,
       pathContains: applied.pathContains.trim() || undefined,
       statusCode: rawSc === '' || !Number.isFinite(parsedSc) ? undefined : parsedSc,
+      httpMethod: applied.httpMethod.trim() || undefined,
       fromUtc: undefined,
       toUtc: undefined,
     })
@@ -56,7 +58,7 @@ export function AdminLogsPage() {
   }, [page, applied])
 
   function applyFilters() {
-    setApplied({ pathContains: pathDraft, statusCode: statusDraft })
+    setApplied({ pathContains: pathDraft, statusCode: statusDraft, httpMethod: methodDraft })
     setPage(1)
   }
 
@@ -76,6 +78,11 @@ export function AdminLogsPage() {
             value={pathDraft}
             onChange={(e) => setPathDraft(e.target.value)}
             placeholder="/api/v1/contact"
+          />
+          <input
+            value={methodDraft}
+            onChange={(e) => setMethodDraft(e.target.value)}
+            placeholder={t('admin.logs.method')}
           />
           <input value={statusDraft} onChange={(e) => setStatusDraft(e.target.value)} placeholder="200" />
           <div className="admin-filters__actions">

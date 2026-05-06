@@ -71,6 +71,24 @@ export interface ApplicationSubmitRequest {
   attachments?: ApplicationAttachmentInput[] | null
 }
 
+export interface ApplicationUpdateByCodeRequest {
+  fullName?: string | null
+  email?: string | null
+  phone?: string | null
+  position?: string | null
+  coverLetter?: string | null
+  attachments?: ApplicationAttachmentInput[] | null
+}
+
+export interface ApplicationByCodeResponse {
+  applicationCode: string
+  fullName: string
+  email: string
+  phone?: string | null
+  position: string
+  coverLetter?: string | null
+}
+
 export interface ApplicationPositionOption {
   value: string
 }

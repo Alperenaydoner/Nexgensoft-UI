@@ -124,6 +124,10 @@ export function AdminApplicationDetailPage() {
       </div>
       <div className="admin-card admin-card--flat">
         <dl className="admin-dl">
+          <dt>{t('admin.applications.applicationCode')}</dt>
+          <dd>
+            <code className="admin-table__mono">{item.id}</code>
+          </dd>
           <dt>{t('admin.email')}</dt>
           <dd>{item.email}</dd>
           <dt>{t('admin.applications.phone')}</dt>

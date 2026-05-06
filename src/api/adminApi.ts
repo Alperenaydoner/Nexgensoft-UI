@@ -315,19 +315,21 @@ export type AdminLogsQuery = {
   page?: number
   pageSize?: number
   statusCode?: number
+  httpMethod?: string
   pathContains?: string
   fromUtc?: string
   toUtc?: string
 }
 
 export async function fetchAdminLogs(q: AdminLogsQuery = {}): Promise<PagedResult<AdminHttpRequestLogListItem>> {
-  const { page = 1, pageSize = 25, statusCode, pathContains, fromUtc, toUtc } = q
+  const { page = 1, pageSize = 25, statusCode, httpMethod, pathContains, fromUtc, toUtc } = q
   return adminRequest<PagedResult<AdminHttpRequestLogListItem>>('/v1/admin/audit/logs', {
     method: 'GET',
     query: {
       page,
       pageSize,
       statusCode: statusCode === undefined ? undefined : statusCode,
+      httpMethod: httpMethod?.trim() || undefined,
       pathContains: pathContains?.trim() || undefined,
       fromUtc: fromUtc || undefined,
       toUtc: toUtc || undefined,
