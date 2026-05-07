@@ -6,6 +6,7 @@ import { ExternalLink } from 'lucide-react'
 import { fetchAdminContentOverview, type AdminContentOverview } from '@/api/adminApi'
 import { AdminPagination } from '@/pages/admin/AdminPagination'
 import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
+import { AdminPageLoader } from '@/pages/admin/AdminPageLoader'
 
 function localeFlag(locale: string) {
   const normalized = locale.trim().toLowerCase()
@@ -55,7 +56,7 @@ export function AdminContentPage() {
       <h1 className="admin-page__title">{t('admin.nav.content')}</h1>
       <p className="admin-muted">{t('admin.content.intro')}</p>
       {error ? <p className="admin-alert admin-alert--error">{error}</p> : null}
-      {!overview && !error ? <p className="admin-muted">{t('admin.loading')}</p> : null}
+      {!overview && !error ? <AdminPageLoader /> : null}
       {overview ? (
         <>
           <div className="admin-stat-grid admin-stat-grid--compact">

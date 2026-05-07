@@ -123,6 +123,7 @@ export function AdminLoginPage() {
               </label>
             </div>
             <button className="admin-btn admin-btn--primary" type="submit" disabled={busy}>
+              {busy ? <span className="nx-inline-loader" aria-hidden="true" /> : null}
               {busy ? t('admin.signingIn') : t('admin.signIn')}
             </button>
           </form>

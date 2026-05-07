@@ -373,6 +373,7 @@ export function ApplicationPage() {
           />
           {newFieldErrors.files ? <span className="form-field-error">{newFieldErrors.files}</span> : null}
           <button type="submit" className="application-page__submit-btn" disabled={loadingCreate}>
+            {loadingCreate ? <span className="nx-inline-loader nx-inline-loader--public" aria-hidden="true" /> : null}
             {loadingCreate ? t('application.sending') : t('application.send')}
             {!loadingCreate ? <SendHorizonal size={15} strokeWidth={2} /> : null}
           </button>
@@ -399,6 +400,7 @@ export function ApplicationPage() {
               />
             </label>
             <button type="button" onClick={() => void onQueryApplication()} disabled={loadingQuery}>
+              {loadingQuery ? <span className="nx-inline-loader nx-inline-loader--public" aria-hidden="true" /> : null}
               {loadingQuery ? t('application.querying') : t('application.query')}
               {!loadingQuery ? <Search size={15} strokeWidth={2} /> : null}
             </button>
@@ -484,6 +486,7 @@ export function ApplicationPage() {
           />
           {editFieldErrors.files ? <span className="form-field-error">{editFieldErrors.files}</span> : null}
           <button type="submit" className="application-page__submit-btn" disabled={loadingUpdate || !loadedCode}>
+            {loadingUpdate ? <span className="nx-inline-loader nx-inline-loader--public" aria-hidden="true" /> : null}
             {loadingUpdate ? t('application.editSending') : t('application.editSend')}
             {!loadingUpdate ? <PencilLine size={15} strokeWidth={2} /> : null}
           </button>

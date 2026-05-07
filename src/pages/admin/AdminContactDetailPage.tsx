@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ArrowLeft, Download } from 'lucide-react'
 
 import { fetchAdminContactAttachmentBlob, fetchAdminContactMessage, type AdminContactMessageDetail } from '@/api/adminApi'
+import { AdminPageLoader } from '@/pages/admin/AdminPageLoader'
 
 export function AdminContactDetailPage() {
   const { t } = useTranslation()
@@ -108,7 +109,7 @@ export function AdminContactDetailPage() {
   if (!msg) {
     return (
       <div className="admin-page">
-        <p className="admin-muted">{t('admin.loading')}</p>
+        <AdminPageLoader />
       </div>
     )
   }

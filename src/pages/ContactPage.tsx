@@ -148,7 +148,7 @@ export function ContactPage() {
           ) : null}
         </label>
         <button type="submit" disabled={loading}>
-          <Send size={14} strokeWidth={2} />
+          {loading ? <span className="nx-inline-loader nx-inline-loader--public" aria-hidden="true" /> : <Send size={14} strokeWidth={2} />}
           {loading ? t('contact.sending') : t('contact.send')}
         </button>
       </form>

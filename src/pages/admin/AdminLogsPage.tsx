@@ -6,6 +6,7 @@ import { ExternalLink } from 'lucide-react'
 import { fetchAdminLogs, type AdminHttpRequestLogListItem } from '@/api/adminApi'
 import type { PagedResult } from '@/api/types/dotnet-contract'
 import { getDefaultLastHoursRangeLocal, localDatetimeToUtcIso } from '@/pages/admin/adminDateFilters'
+import { AdminPageLoader } from '@/pages/admin/AdminPageLoader'
 
 import { AdminPagination } from '@/pages/admin/AdminPagination'
 import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
@@ -141,7 +142,7 @@ export function AdminLogsPage() {
       </div>
 
       {error ? <p className="admin-alert admin-alert--error">{error}</p> : null}
-      {busy && !data ? <p className="admin-muted">{t('admin.loading')}</p> : null}
+      {busy && !data ? <AdminPageLoader /> : null}
       {data ? (
         <>
           <div className="admin-results-summary">

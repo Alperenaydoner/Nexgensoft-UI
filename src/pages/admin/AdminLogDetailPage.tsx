@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ArrowLeft } from 'lucide-react'
 
 import { fetchAdminLogDetail, type AdminHttpRequestLogDetail } from '@/api/adminApi'
+import { AdminPageLoader } from '@/pages/admin/AdminPageLoader'
 
 export function AdminLogDetailPage() {
   const { t } = useTranslation()
@@ -46,7 +47,7 @@ export function AdminLogDetailPage() {
   if (!log) {
     return (
       <div className="admin-page">
-        <p className="admin-muted">{t('admin.loading')}</p>
+        <AdminPageLoader />
       </div>
     )
   }

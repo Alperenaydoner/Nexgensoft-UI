@@ -10,6 +10,7 @@ import type { PagedResult } from '@/api/types/dotnet-contract'
 import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
 import { AdminPagination } from '@/pages/admin/AdminPagination'
 import { getDefaultLastHoursRangeLocal, localDatetimeToUtcIso } from '@/pages/admin/adminDateFilters'
+import { AdminPageLoader } from '@/pages/admin/AdminPageLoader'
 
 type AppliedFilters = {
   query: string
@@ -181,7 +182,7 @@ export function AdminApplicationsPage() {
         </div>
       </div>
       {error ? <p className="admin-alert admin-alert--error">{error}</p> : null}
-      {busy && !data ? <div className="admin-skeleton" aria-label={t('admin.loading')} /> : null}
+      {busy && !data ? <AdminPageLoader /> : null}
       {data ? (
         <>
           <div className="admin-results-summary">

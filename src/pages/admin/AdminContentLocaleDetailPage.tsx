@@ -11,6 +11,7 @@ import {
   type AdminContentItem,
   type AdminContentAuditRow,
 } from '@/api/adminApi'
+import { AdminPageLoader } from '@/pages/admin/AdminPageLoader'
 
 function emptyRow(): AdminContentItem {
   return { key: '', value: '' }
@@ -106,7 +107,7 @@ export function AdminContentLocaleDetailPage() {
   if (busy) {
     return (
       <div className="admin-page">
-        <div className="admin-skeleton" aria-label={t('admin.loading')} />
+        <AdminPageLoader />
       </div>
     )
   }
@@ -132,7 +133,7 @@ export function AdminContentLocaleDetailPage() {
             {t('admin.backToList')}
           </Link>
           <button type="button" className="admin-btn admin-btn--primary" onClick={() => void onSaveAll()} disabled={saving}>
-            <Save size={14} strokeWidth={2} />
+            {saving ? <span className="nx-inline-loader" aria-hidden="true" /> : <Save size={14} strokeWidth={2} />}
             {saving ? t('admin.contentEditor.saving') : t('admin.contentEditor.saveAll')}
           </button>
         </div>

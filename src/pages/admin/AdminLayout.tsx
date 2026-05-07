@@ -17,6 +17,7 @@ import {
 } from '@/api/adminApi'
 
 import '@/pages/admin/admin.css'
+import { AdminPageLoader } from '@/pages/admin/AdminPageLoader'
 
 export type AdminOutletContext = { user: CurrentUserDto }
 type AdminSearchItem = {
@@ -225,7 +226,7 @@ export function AdminLayout() {
     return (
       <div className="admin-root">
         <div className="admin-content admin-content--centered">
-          <p className="admin-muted">{t('admin.loading')}</p>
+          <AdminPageLoader />
         </div>
       </div>
     )
@@ -287,7 +288,7 @@ export function AdminLayout() {
               placeholder={t('admin.search.placeholder')}
             />
             <div className="admin-search-results">
-              {searchLoading ? <p className="admin-muted">{t('admin.loading')}</p> : null}
+              {searchLoading ? <AdminPageLoader compact /> : null}
               {searchError ? <p className="admin-alert admin-alert--error">{searchError}</p> : null}
               {!searchLoading && !searchError && filteredSearchItems.length === 0 ? (
                 <p className="admin-empty">{t('admin.empty.noResults')}</p>

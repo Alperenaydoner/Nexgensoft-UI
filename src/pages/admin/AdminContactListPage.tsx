@@ -7,6 +7,7 @@ import { fetchAdminContactMessages, type AdminContactMessageListItem } from '@/a
 import { Select } from '@/components/ui/Select'
 import type { PagedResult } from '@/api/types/dotnet-contract'
 import { getDefaultLastHoursRangeLocal, localDatetimeToUtcIso } from '@/pages/admin/adminDateFilters'
+import { AdminPageLoader } from '@/pages/admin/AdminPageLoader'
 
 import { AdminPagination } from '@/pages/admin/AdminPagination'
 import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
@@ -157,7 +158,7 @@ export function AdminContactListPage() {
         </div>
       </div>
       {error ? <p className="admin-alert admin-alert--error">{error}</p> : null}
-      {busy && !data ? <div className="admin-skeleton" aria-label={t('admin.loading')} /> : null}
+      {busy && !data ? <AdminPageLoader /> : null}
       {data ? (
         <>
           <div className="admin-results-summary">

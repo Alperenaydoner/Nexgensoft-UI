@@ -32,6 +32,7 @@ export function AdminConfirmDialog({
             {cancelText}
           </button>
           <button type="button" className="admin-btn admin-btn--primary" onClick={onConfirm} disabled={busy}>
+            {busy ? <span className="nx-inline-loader" aria-hidden="true" /> : null}
             {confirmText}
           </button>
         </div>
@@ -104,6 +105,7 @@ export function AdminPromptDialog({
             {cancelText}
           </button>
           <button type="button" className="admin-btn admin-btn--primary" onClick={onConfirm} disabled={busy}>
+            {busy ? <span className="nx-inline-loader" aria-hidden="true" /> : null}
             {confirmText}
           </button>
         </div>

@@ -16,6 +16,7 @@ import type { PagedResult } from '@/api/types/dotnet-contract'
 import { AdminPagination } from '@/pages/admin/AdminPagination'
 import { AdminConfirmDialog, AdminPanelDialog, AdminPromptDialog } from '@/pages/admin/AdminDialogs'
 import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
+import { AdminPageLoader } from '@/pages/admin/AdminPageLoader'
 
 export function AdminRolesPage() {
   const { t } = useTranslation()
@@ -140,7 +141,7 @@ export function AdminRolesPage() {
         </div>
       </div>
       {error ? <p className="admin-alert admin-alert--error">{error}</p> : null}
-      {busy && !data ? <p className="admin-muted">{t('admin.loading')}</p> : null}
+      {busy && !data ? <AdminPageLoader /> : null}
       {data ? (
         <>
           <div className="admin-table-wrap">

@@ -7,6 +7,7 @@ import { ArrowLeft, PencilLine, Trash2 } from 'lucide-react'
 import { deleteAdminUser, fetchAdminRoleOptions, fetchAdminUser, updateAdminUser, type AdminUserDetail } from '@/api/adminApi'
 import { Select } from '@/components/ui/Select'
 import { AdminConfirmDialog } from '@/pages/admin/AdminDialogs'
+import { AdminPageLoader } from '@/pages/admin/AdminPageLoader'
 
 export function AdminUserDetailPage() {
   const { t } = useTranslation()
@@ -21,6 +22,8 @@ export function AdminUserDetailPage() {
   const [selectedRoles, setSelectedRoles] = useState<string[]>([])
   const [password, setPassword] = useState('')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [saveBusy, setSaveBusy] = useState(false)
+  const [deleteBusy, setDeleteBusy] = useState(false)
 
   function toggleRole(roleName: string) {
     setSelectedRoles((prev) => (prev.includes(roleName) ? prev.filter((r) => r !== roleName) : [...prev, roleName]))
@@ -78,7 +81,7 @@ export function AdminUserDetailPage() {
   if (!user) {
     return (
       <div className="admin-page">
-        <p className="admin-muted">{t('admin.loading')}</p>
+        <AdminPageLoader />
       </div>
     )
   }
@@ -159,10 +162,12 @@ export function AdminUserDetailPage() {
               <button
                 type="button"
                 className="admin-btn admin-btn--primary"
+                disabled={saveBusy}
                 onClick={async () => {
                   if (!id || !user) {
                     return
                   }
+                  setSaveBusy(true)
                   try {
                     const updated = await updateAdminUser(id, {
                       email: user.email,
@@ -177,9 +182,12 @@ export function AdminUserDetailPage() {
                     toast.success(t('admin.usersCrud.updated'))
                   } catch (e) {
                     toast.error(e instanceof Error ? e.message : t('admin.actions.failed'))
+                  } finally {
+                    setSaveBusy(false)
                   }
                 }}
               >
+                {saveBusy ? <span className="nx-inline-loader" aria-hidden="true" /> : null}
                 {t('admin.actions.save')}
               </button>
             </div>
@@ -192,11 +200,13 @@ export function AdminUserDetailPage() {
         message={t('admin.usersCrud.deleteMessage', { email: user.email })}
         confirmText={t('admin.actions.delete')}
         cancelText={t('admin.actions.cancel')}
+        busy={deleteBusy}
         onCancel={() => setShowDeleteConfirm(false)}
         onConfirm={async () => {
           if (!id) {
             return
           }
+          setDeleteBusy(true)
           try {
             await deleteAdminUser(id)
             toast.success(t('admin.usersCrud.deleted'))
@@ -204,6 +214,7 @@ export function AdminUserDetailPage() {
           } catch (e) {
             toast.error(e instanceof Error ? e.message : t('admin.actions.failed'))
           } finally {
+            setDeleteBusy(false)
             setShowDeleteConfirm(false)
           }
         }}

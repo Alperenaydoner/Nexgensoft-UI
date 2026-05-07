@@ -9,6 +9,7 @@ import {
   type AdminJobApplicationAttachment,
   type AdminJobApplicationDetail,
 } from '@/api/adminApi'
+import { AdminPageLoader } from '@/pages/admin/AdminPageLoader'
 
 function isVideoAttachment(a: AdminJobApplicationAttachment): boolean {
   return a.contentType.startsWith('video/')
@@ -134,7 +135,7 @@ export function AdminApplicationDetailPage() {
   if (!item) {
     return (
       <div className="admin-page">
-        <p className="admin-muted">{t('admin.loading')}</p>
+        <AdminPageLoader />
       </div>
     )
   }

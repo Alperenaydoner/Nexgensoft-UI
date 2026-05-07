@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 
 import { adminPing, fetchAdminStats, type AdminStats } from '@/api/adminApi'
 import { ApiError } from '@/api/httpClient'
+import { AdminPageLoader } from '@/pages/admin/AdminPageLoader'
 
 import type { AdminOutletContext } from '@/pages/admin/AdminLayout'
 
@@ -106,9 +107,7 @@ export function AdminHomePage() {
           <StatCard label={t('admin.stats.contentBundles')} value={stats.siteContentBundleCount} icon={Type} tone="content" />
           <StatCard label={t('admin.stats.localizedStrings')} value={stats.siteLocalizedStringCount} icon={Type} tone="content" />
         </div>
-      ) : !loadError ? (
-        <p className="admin-muted">{t('admin.loading')}</p>
-      ) : null}
+      ) : !loadError ? <AdminPageLoader /> : null}
 
       <div className="admin-card admin-card--flat">
         <h2 className="admin-card__title">{t('admin.quickLinks')}</h2>
