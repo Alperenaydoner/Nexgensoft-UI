@@ -18,13 +18,34 @@ i18n.on('languageChanged', (lng) => {
   syncDocumentLang(lng)
 })
 
-void bootstrapRemoteContent().finally(() => {
-  registerRemoteContentLanguageListener()
-  createRoot(document.getElementById('root')!).render(
+const rootElement = document.getElementById('root')
+if (rootElement) {
+  const root = createRoot(rootElement)
+  root.render(
     <StrictMode>
-      <Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <div className="app-shell-loader" aria-busy="true" aria-label="Loading Nexgensoft">
+            <div className="app-shell-loader__glow" />
+            <div className="app-shell-loader__card">
+              <span className="app-shell-loader__badge">Nexgensoft</span>
+              <h1 className="app-shell-loader__title">Yükleniyor…</h1>
+              <p className="app-shell-loader__subtitle">
+                Şirket sitesi açılırken içerik hazırlanıyor. Bu işlem birkaç saniye sürebilir.
+              </p>
+              <div className="app-shell-loader__meter">
+                <div />
+              </div>
+            </div>
+          </div>
+        }
+      >
         <App />
       </Suspense>
     </StrictMode>,
   )
-})
+
+  void bootstrapRemoteContent().finally(() => {
+    registerRemoteContentLanguageListener()
+  })
+}

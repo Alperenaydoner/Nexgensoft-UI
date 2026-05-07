@@ -252,7 +252,7 @@ export function ApplicationPage() {
     const coverLetter = editCoverLetter.trim()
 
     const nextErrors = validateFields(fullName, email, editPosition, coverLetter, editFiles, {
-      requireMinFileCount: false,
+      requireMinFileCount: true,
     })
     if (!applicationCode) {
       nextErrors.applicationCode = t('contact.validation.required')
@@ -318,6 +318,11 @@ export function ApplicationPage() {
             <SendHorizonal size={16} strokeWidth={2} />
             <span>{t('application.newTitle')}</span>
           </h2>
+          {Object.keys(newFieldErrors).length > 0 ? (
+            <div className="banner err" role="alert">
+              {t('application.validation.summary')}
+            </div>
+          ) : null}
           <label>
             {t('contact.name')}
             <input name="fullName" aria-invalid={newFieldErrors.fullName ? true : undefined} />
@@ -380,6 +385,11 @@ export function ApplicationPage() {
             <PencilLine size={16} strokeWidth={2} />
             <span>{t('application.editTitle')}</span>
           </h2>
+          {Object.keys(editFieldErrors).length > 0 ? (
+            <div className="banner err" role="alert">
+              {t('application.validation.summary')}
+            </div>
+          ) : null}
           <div className="application-page__query-row">
             <label className="application-page__query-label">
               {t('application.applicationCode')}
