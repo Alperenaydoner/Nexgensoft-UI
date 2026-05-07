@@ -154,8 +154,6 @@ export function ApplicationPage() {
       if (selected.length < minFiles) {
         next.files = t('application.validation.filesMin', { count: minFiles })
       }
-    } else if (selected.length > 0 && selected.length < minFiles) {
-      next.files = t('application.validation.filesMin', { count: minFiles })
     }
     return next
   }
