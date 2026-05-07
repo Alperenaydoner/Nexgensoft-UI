@@ -6,8 +6,34 @@ import { ArrowLeft, Download } from 'lucide-react'
 import {
   fetchAdminJobApplication,
   fetchAdminJobApplicationAttachmentBlob,
+  type AdminJobApplicationAttachment,
   type AdminJobApplicationDetail,
 } from '@/api/adminApi'
+
+function isVideoAttachment(a: AdminJobApplicationAttachment): boolean {
+  return a.contentType.startsWith('video/')
+}
+
+function isDocPreviewAttachment(a: AdminJobApplicationAttachment): boolean {
+  const name = a.originalFileName.toLowerCase()
+  return (
+    a.contentType === 'application/pdf' ||
+    a.contentType.startsWith('text/') ||
+    a.contentType.includes('msword') ||
+    a.contentType.includes('officedocument') ||
+    a.contentType.includes('spreadsheetml') ||
+    name.endsWith('.pdf') ||
+    name.endsWith('.txt') ||
+    name.endsWith('.doc') ||
+    name.endsWith('.docx') ||
+    name.endsWith('.xls') ||
+    name.endsWith('.xlsx')
+  )
+}
+
+function canPreviewAttachment(a: AdminJobApplicationAttachment): boolean {
+  return a.isImage || isVideoAttachment(a) || isDocPreviewAttachment(a)
+}
 
 export function AdminApplicationDetailPage() {
   const { t } = useTranslation()
@@ -47,7 +73,7 @@ export function AdminApplicationDetailPage() {
     void (async () => {
       const next: Record<string, string> = {}
       for (const a of item.attachments) {
-        if (!a.isImage) {
+        if (!canPreviewAttachment(a)) {
           continue
         }
         try {
@@ -156,6 +182,16 @@ export function AdminApplicationDetailPage() {
                   <a href={blobUrls[a.id]} target="_blank" rel="noreferrer" className="admin-attachment-preview">
                     <img src={blobUrls[a.id]} alt={a.originalFileName} />
                   </a>
+                ) : null}
+                {!a.isImage && isVideoAttachment(a) && blobUrls[a.id] ? (
+                  <div className="admin-attachment-preview">
+                    <video src={blobUrls[a.id]} controls preload="metadata" />
+                  </div>
+                ) : null}
+                {!a.isImage && !isVideoAttachment(a) && isDocPreviewAttachment(a) && blobUrls[a.id] ? (
+                  <div className="admin-attachment-preview admin-attachment-preview--doc">
+                    <iframe src={blobUrls[a.id]} title={a.originalFileName} loading="lazy" />
+                  </div>
                 ) : null}
                 <button
                   type="button"

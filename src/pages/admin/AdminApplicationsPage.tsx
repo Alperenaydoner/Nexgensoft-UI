@@ -9,44 +9,69 @@ import { Select } from '@/components/ui/Select'
 import type { PagedResult } from '@/api/types/dotnet-contract'
 import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
 import { AdminPagination } from '@/pages/admin/AdminPagination'
+import { getDefaultLastHoursRangeLocal, localDatetimeToUtcIso } from '@/pages/admin/adminDateFilters'
+
+type AppliedFilters = {
+  query: string
+  position: string
+  hasAttachments: 'all' | 'yes' | 'no'
+  fromUtc: string
+  toUtc: string
+  sortBy: 'createdAtUtc' | 'fullName' | 'email' | 'position' | 'attachments'
+  sortDir: 'asc' | 'desc'
+}
 
 export function AdminApplicationsPage() {
   const { t } = useTranslation()
+  const defaultRange = getDefaultLastHoursRangeLocal()
   const [data, setData] = useState<PagedResult<AdminJobApplicationListItem> | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(true)
+  const [globalTotalCount, setGlobalTotalCount] = useState<number>(0)
   const [query, setQuery] = useState('')
   const [position, setPosition] = useState('')
   const [positions, setPositions] = useState<string[]>([])
   const [hasAttachments, setHasAttachments] = useState<'all' | 'yes' | 'no'>('all')
-  const [fromUtc, setFromUtc] = useState('')
-  const [toUtc, setToUtc] = useState('')
+  const [fromLocal, setFromLocal] = useState(defaultRange.fromLocal)
+  const [toLocal, setToLocal] = useState(defaultRange.toLocal)
   const [sortBy, setSortBy] = useState<'createdAtUtc' | 'fullName' | 'email' | 'position' | 'attachments'>('createdAtUtc')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
+  const [applied, setApplied] = useState<AppliedFilters>({
+    query: '',
+    position: '',
+    hasAttachments: 'all',
+    fromUtc: defaultRange.fromLocal,
+    toUtc: defaultRange.toLocal,
+    sortBy: 'createdAtUtc',
+    sortDir: 'desc',
+  })
 
   const load = useCallback(async (p: number) => {
     setBusy(true)
     setError(null)
     try {
-      setData(
-        await fetchAdminJobApplications(
+      const [filtered, unfiltered] = await Promise.all([
+        fetchAdminJobApplications(
           p,
           20,
-          query.trim() || undefined,
-          position.trim() || undefined,
-          hasAttachments === 'all' ? undefined : hasAttachments === 'yes',
-          fromUtc || undefined,
-          toUtc || undefined,
-          sortBy,
-          sortDir,
+          applied.query.trim() || undefined,
+          applied.position.trim() || undefined,
+          applied.hasAttachments === 'all' ? undefined : applied.hasAttachments === 'yes',
+          localDatetimeToUtcIso(applied.fromUtc),
+          localDatetimeToUtcIso(applied.toUtc),
+          applied.sortBy,
+          applied.sortDir,
         ),
-      )
+        fetchAdminJobApplications(1, 1, undefined, undefined, undefined, undefined, undefined, 'createdAtUtc', 'desc'),
+      ])
+      setData(filtered)
+      setGlobalTotalCount(unfiltered.totalCount)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Error')
     } finally {
       setBusy(false)
     }
-  }, [fromUtc, hasAttachments, position, query, sortBy, sortDir, toUtc])
+  }, [applied])
 
   useEffect(() => {
     void load(1)
@@ -67,6 +92,31 @@ export function AdminApplicationsPage() {
     }
   }, [])
 
+  function applyFilters() {
+    setApplied({
+      query,
+      position,
+      hasAttachments,
+      fromUtc: fromLocal,
+      toUtc: toLocal,
+      sortBy,
+      sortDir,
+    })
+  }
+
+  function useLast24Hours() {
+    const next = getDefaultLastHoursRangeLocal()
+    setFromLocal(next.fromLocal)
+    setToLocal(next.toLocal)
+    setApplied((prev) => ({ ...prev, fromUtc: next.fromLocal, toUtc: next.toLocal }))
+  }
+
+  function clearDateRange() {
+    setFromLocal('')
+    setToLocal('')
+    setApplied((prev) => ({ ...prev, fromUtc: '', toUtc: '' }))
+  }
+
   return (
     <div className="admin-page">
       <div className="admin-page__head">
@@ -74,7 +124,7 @@ export function AdminApplicationsPage() {
       </div>
       <div className="admin-card admin-card--flat">
         <h2 className="admin-card__title">{t('admin.filters.title')}</h2>
-        <div className="admin-users-filters">
+        <div className="admin-users-filters admin-filters-grid">
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('admin.applications.searchPlaceholder')} />
           <Select
             value={position}
@@ -90,8 +140,14 @@ export function AdminApplicationsPage() {
               { value: 'no', label: t('admin.contact.withoutAttachments') },
             ]}
           />
-          <input type="datetime-local" value={fromUtc} onChange={(e) => setFromUtc(e.target.value)} />
-          <input type="datetime-local" value={toUtc} onChange={(e) => setToUtc(e.target.value)} />
+          <div className="admin-field admin-field--datetime">
+            <label>{t('admin.filters.fromDate')}</label>
+            <input type="datetime-local" value={fromLocal} onChange={(e) => setFromLocal(e.target.value)} />
+          </div>
+          <div className="admin-field admin-field--datetime">
+            <label>{t('admin.filters.toDate')}</label>
+            <input type="datetime-local" value={toLocal} onChange={(e) => setToLocal(e.target.value)} />
+          </div>
           <Select
             value={sortBy}
             onChange={(next) => setSortBy(next as 'createdAtUtc' | 'fullName' | 'email' | 'position' | 'attachments')}
@@ -112,7 +168,13 @@ export function AdminApplicationsPage() {
             ]}
           />
           <div className="admin-filters__actions">
-            <button type="button" className="admin-btn admin-btn--primary" onClick={() => void load(1)} disabled={busy}>
+            <button type="button" className="admin-btn admin-btn--ghost" onClick={useLast24Hours} disabled={busy}>
+              {t('admin.filters.last24Hours')}
+            </button>
+            <button type="button" className="admin-btn admin-btn--ghost" onClick={clearDateRange} disabled={busy}>
+              {t('admin.filters.clearDate')}
+            </button>
+            <button type="button" className="admin-btn admin-btn--primary" onClick={applyFilters} disabled={busy}>
               {t('admin.logs.apply')}
             </button>
           </div>
@@ -122,6 +184,16 @@ export function AdminApplicationsPage() {
       {busy && !data ? <div className="admin-skeleton" aria-label={t('admin.loading')} /> : null}
       {data ? (
         <>
+          <div className="admin-results-summary">
+            <div className="admin-results-chip">
+              <span className="admin-results-chip__label">{t('admin.filters.totalRecords')}</span>
+              <strong>{globalTotalCount}</strong>
+            </div>
+            <div className="admin-results-chip">
+              <span className="admin-results-chip__label">{t('admin.filters.shownRecords')}</span>
+              <strong>{data.totalCount}</strong>
+            </div>
+          </div>
           <div className="admin-table-wrap">
             <table className="admin-table">
               <thead>

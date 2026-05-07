@@ -327,7 +327,13 @@
       "allRoles": "All roles",
       "allPositions": "All positions",
       "sortDesc": "Z-A / New-Old",
-      "sortAsc": "A-Z / Old-New"
+      "sortAsc": "A-Z / Old-New",
+      "fromDate": "From date-time",
+      "toDate": "To date-time",
+      "last24Hours": "Last 24 hours",
+      "clearDate": "Clear date range",
+      "totalRecords": "Total records:",
+      "shownRecords": "Shown:"
     },
     "usersCrud": {
       "newUserTitle": "New user",

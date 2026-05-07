@@ -327,7 +327,13 @@
       "allRoles": "Tüm roller",
       "allPositions": "Tum pozisyonlar",
       "sortDesc": "Z-A / Yeni-Eski",
-      "sortAsc": "A-Z / Eski-Yeni"
+      "sortAsc": "A-Z / Eski-Yeni",
+      "fromDate": "Başlangıç tarih-saat",
+      "toDate": "Bitiş tarih-saat",
+      "last24Hours": "Son 24 saat",
+      "clearDate": "Tarihi temizle",
+      "totalRecords": "Toplam kayıt:",
+      "shownRecords": "Listelenen:"
     },
     "usersCrud": {
       "newUserTitle": "Yeni kullanıcı",

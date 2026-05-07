@@ -6,46 +6,95 @@ import { ExternalLink } from 'lucide-react'
 import { fetchAdminContactMessages, type AdminContactMessageListItem } from '@/api/adminApi'
 import { Select } from '@/components/ui/Select'
 import type { PagedResult } from '@/api/types/dotnet-contract'
+import { getDefaultLastHoursRangeLocal, localDatetimeToUtcIso } from '@/pages/admin/adminDateFilters'
 
 import { AdminPagination } from '@/pages/admin/AdminPagination'
 import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
 
+type AppliedFilters = {
+  query: string
+  hasAttachments: 'all' | 'yes' | 'no'
+  fromUtc: string
+  toUtc: string
+  sortBy: 'createdAtUtc' | 'fullName' | 'email' | 'attachments'
+  sortDir: 'asc' | 'desc'
+}
+
 export function AdminContactListPage() {
   const { t } = useTranslation()
+  const defaultRange = getDefaultLastHoursRangeLocal()
   const [data, setData] = useState<PagedResult<AdminContactMessageListItem> | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(true)
+  const [globalTotalCount, setGlobalTotalCount] = useState<number>(0)
   const [query, setQuery] = useState('')
   const [hasAttachments, setHasAttachments] = useState<'all' | 'yes' | 'no'>('all')
+  const [fromLocal, setFromLocal] = useState(defaultRange.fromLocal)
+  const [toLocal, setToLocal] = useState(defaultRange.toLocal)
   const [sortBy, setSortBy] = useState<'createdAtUtc' | 'fullName' | 'email' | 'attachments'>('createdAtUtc')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
+  const [applied, setApplied] = useState<AppliedFilters>({
+    query: '',
+    hasAttachments: 'all',
+    fromUtc: defaultRange.fromLocal,
+    toUtc: defaultRange.toLocal,
+    sortBy: 'createdAtUtc',
+    sortDir: 'desc',
+  })
 
   const load = useCallback(async (p: number) => {
     setBusy(true)
     setError(null)
     try {
-      setData(
-        await fetchAdminContactMessages(
+      const [filtered, unfiltered] = await Promise.all([
+        fetchAdminContactMessages(
           p,
           20,
-          query.trim() || undefined,
-          hasAttachments === 'all' ? undefined : hasAttachments === 'yes',
-          undefined,
-          undefined,
-          sortBy,
-          sortDir,
+          applied.query.trim() || undefined,
+          applied.hasAttachments === 'all' ? undefined : applied.hasAttachments === 'yes',
+          localDatetimeToUtcIso(applied.fromUtc),
+          localDatetimeToUtcIso(applied.toUtc),
+          applied.sortBy,
+          applied.sortDir,
         ),
-      )
+        fetchAdminContactMessages(1, 1, undefined, undefined, undefined, undefined, 'createdAtUtc', 'desc'),
+      ])
+      setData(filtered)
+      setGlobalTotalCount(unfiltered.totalCount)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Error')
     } finally {
       setBusy(false)
     }
-  }, [hasAttachments, query, sortBy, sortDir])
+  }, [applied])
 
   useEffect(() => {
     void load(1)
   }, [load])
+
+  function applyFilters() {
+    setApplied({
+      query,
+      hasAttachments,
+      fromUtc: fromLocal,
+      toUtc: toLocal,
+      sortBy,
+      sortDir,
+    })
+  }
+
+  function useLast24Hours() {
+    const next = getDefaultLastHoursRangeLocal()
+    setFromLocal(next.fromLocal)
+    setToLocal(next.toLocal)
+    setApplied((prev) => ({ ...prev, fromUtc: next.fromLocal, toUtc: next.toLocal }))
+  }
+
+  function clearDateRange() {
+    setFromLocal('')
+    setToLocal('')
+    setApplied((prev) => ({ ...prev, fromUtc: '', toUtc: '' }))
+  }
 
   return (
     <div className="admin-page">
@@ -57,7 +106,7 @@ export function AdminContactListPage() {
       </div>
       <div className="admin-card admin-card--flat">
         <h2 className="admin-card__title">{t('admin.filters.title')}</h2>
-        <div className="admin-users-filters">
+        <div className="admin-users-filters admin-filters-grid">
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('admin.contact.searchPlaceholder')} />
           <Select
             value={hasAttachments}
@@ -86,8 +135,22 @@ export function AdminContactListPage() {
               { value: 'asc', label: t('admin.filters.sortAsc') },
             ]}
           />
+          <div className="admin-field admin-field--datetime">
+            <label>{t('admin.filters.fromDate')}</label>
+            <input type="datetime-local" value={fromLocal} onChange={(e) => setFromLocal(e.target.value)} />
+          </div>
+          <div className="admin-field admin-field--datetime">
+            <label>{t('admin.filters.toDate')}</label>
+            <input type="datetime-local" value={toLocal} onChange={(e) => setToLocal(e.target.value)} />
+          </div>
           <div className="admin-filters__actions">
-            <button type="button" className="admin-btn admin-btn--primary" onClick={() => void load(1)} disabled={busy}>
+            <button type="button" className="admin-btn admin-btn--ghost" onClick={useLast24Hours} disabled={busy}>
+              {t('admin.filters.last24Hours')}
+            </button>
+            <button type="button" className="admin-btn admin-btn--ghost" onClick={clearDateRange} disabled={busy}>
+              {t('admin.filters.clearDate')}
+            </button>
+            <button type="button" className="admin-btn admin-btn--primary" onClick={applyFilters} disabled={busy}>
               {t('admin.logs.apply')}
             </button>
           </div>
@@ -97,6 +160,16 @@ export function AdminContactListPage() {
       {busy && !data ? <div className="admin-skeleton" aria-label={t('admin.loading')} /> : null}
       {data ? (
         <>
+          <div className="admin-results-summary">
+            <div className="admin-results-chip">
+              <span className="admin-results-chip__label">{t('admin.filters.totalRecords')}</span>
+              <strong>{globalTotalCount}</strong>
+            </div>
+            <div className="admin-results-chip">
+              <span className="admin-results-chip__label">{t('admin.filters.shownRecords')}</span>
+              <strong>{data.totalCount}</strong>
+            </div>
+          </div>
           <div className="admin-table-wrap">
             <table className="admin-table">
               <thead>

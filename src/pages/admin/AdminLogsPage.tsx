@@ -5,22 +5,33 @@ import { ExternalLink } from 'lucide-react'
 
 import { fetchAdminLogs, type AdminHttpRequestLogListItem } from '@/api/adminApi'
 import type { PagedResult } from '@/api/types/dotnet-contract'
+import { getDefaultLastHoursRangeLocal, localDatetimeToUtcIso } from '@/pages/admin/adminDateFilters'
 
 import { AdminPagination } from '@/pages/admin/AdminPagination'
 import { AdminOverflowMenu } from '@/pages/admin/AdminOverflowMenu'
 
-type AppliedFilters = { pathContains: string; statusCode: string; httpMethod: string }
+type AppliedFilters = { pathContains: string; statusCode: string; httpMethod: string; fromUtc: string; toUtc: string }
 
 export function AdminLogsPage() {
   const { t } = useTranslation()
+  const defaultRange = getDefaultLastHoursRangeLocal()
   const [pathDraft, setPathDraft] = useState('')
   const [statusDraft, setStatusDraft] = useState('')
   const [methodDraft, setMethodDraft] = useState('')
-  const [applied, setApplied] = useState<AppliedFilters>({ pathContains: '', statusCode: '', httpMethod: '' })
+  const [fromLocal, setFromLocal] = useState(defaultRange.fromLocal)
+  const [toLocal, setToLocal] = useState(defaultRange.toLocal)
+  const [applied, setApplied] = useState<AppliedFilters>({
+    pathContains: '',
+    statusCode: '',
+    httpMethod: '',
+    fromUtc: defaultRange.fromLocal,
+    toUtc: defaultRange.toLocal,
+  })
   const [page, setPage] = useState(1)
   const [data, setData] = useState<PagedResult<AdminHttpRequestLogListItem> | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(true)
+  const [globalTotalCount, setGlobalTotalCount] = useState<number>(0)
 
   useEffect(() => {
     let cancelled = false
@@ -28,18 +39,25 @@ export function AdminLogsPage() {
     setError(null)
     const rawSc = applied.statusCode.trim()
     const parsedSc = rawSc === '' ? NaN : Number.parseInt(rawSc, 10)
-    void fetchAdminLogs({
-      page,
-      pageSize: 25,
-      pathContains: applied.pathContains.trim() || undefined,
-      statusCode: rawSc === '' || !Number.isFinite(parsedSc) ? undefined : parsedSc,
-      httpMethod: applied.httpMethod.trim() || undefined,
-      fromUtc: undefined,
-      toUtc: undefined,
-    })
-      .then((res) => {
+    void Promise.all([
+      fetchAdminLogs({
+        page,
+        pageSize: 25,
+        pathContains: applied.pathContains.trim() || undefined,
+        statusCode: rawSc === '' || !Number.isFinite(parsedSc) ? undefined : parsedSc,
+        httpMethod: applied.httpMethod.trim() || undefined,
+        fromUtc: localDatetimeToUtcIso(applied.fromUtc),
+        toUtc: localDatetimeToUtcIso(applied.toUtc),
+      }),
+      fetchAdminLogs({
+        page: 1,
+        pageSize: 1,
+      }),
+    ])
+      .then(([filtered, unfiltered]) => {
         if (!cancelled) {
-          setData(res)
+          setData(filtered)
+          setGlobalTotalCount(unfiltered.totalCount)
         }
       })
       .catch((e) => {
@@ -58,7 +76,22 @@ export function AdminLogsPage() {
   }, [page, applied])
 
   function applyFilters() {
-    setApplied({ pathContains: pathDraft, statusCode: statusDraft, httpMethod: methodDraft })
+    setApplied({ pathContains: pathDraft, statusCode: statusDraft, httpMethod: methodDraft, fromUtc: fromLocal, toUtc: toLocal })
+    setPage(1)
+  }
+
+  function useLast24Hours() {
+    const next = getDefaultLastHoursRangeLocal()
+    setFromLocal(next.fromLocal)
+    setToLocal(next.toLocal)
+    setApplied((prev) => ({ ...prev, fromUtc: next.fromLocal, toUtc: next.toLocal }))
+    setPage(1)
+  }
+
+  function clearDateRange() {
+    setFromLocal('')
+    setToLocal('')
+    setApplied((prev) => ({ ...prev, fromUtc: '', toUtc: '' }))
     setPage(1)
   }
 
@@ -73,7 +106,7 @@ export function AdminLogsPage() {
 
       <div className="admin-card admin-card--flat">
         <h2 className="admin-card__title">{t('admin.filters.title')}</h2>
-        <div className="admin-users-filters">
+        <div className="admin-users-filters admin-filters-grid">
           <input
             value={pathDraft}
             onChange={(e) => setPathDraft(e.target.value)}
@@ -85,7 +118,21 @@ export function AdminLogsPage() {
             placeholder={t('admin.logs.method')}
           />
           <input value={statusDraft} onChange={(e) => setStatusDraft(e.target.value)} placeholder="200" />
+          <div className="admin-field admin-field--datetime">
+            <label>{t('admin.filters.fromDate')}</label>
+            <input type="datetime-local" value={fromLocal} onChange={(e) => setFromLocal(e.target.value)} />
+          </div>
+          <div className="admin-field admin-field--datetime">
+            <label>{t('admin.filters.toDate')}</label>
+            <input type="datetime-local" value={toLocal} onChange={(e) => setToLocal(e.target.value)} />
+          </div>
           <div className="admin-filters__actions">
+            <button type="button" className="admin-btn admin-btn--ghost" onClick={useLast24Hours} disabled={busy}>
+              {t('admin.filters.last24Hours')}
+            </button>
+            <button type="button" className="admin-btn admin-btn--ghost" onClick={clearDateRange} disabled={busy}>
+              {t('admin.filters.clearDate')}
+            </button>
             <button type="button" className="admin-btn admin-btn--primary" onClick={applyFilters} disabled={busy}>
               {t('admin.logs.apply')}
             </button>
@@ -97,6 +144,16 @@ export function AdminLogsPage() {
       {busy && !data ? <p className="admin-muted">{t('admin.loading')}</p> : null}
       {data ? (
         <>
+          <div className="admin-results-summary">
+            <div className="admin-results-chip">
+              <span className="admin-results-chip__label">{t('admin.filters.totalRecords')}</span>
+              <strong>{globalTotalCount}</strong>
+            </div>
+            <div className="admin-results-chip">
+              <span className="admin-results-chip__label">{t('admin.filters.shownRecords')}</span>
+              <strong>{data.totalCount}</strong>
+            </div>
+          </div>
           <div className="admin-table-wrap">
             <table className="admin-table">
               <thead>
