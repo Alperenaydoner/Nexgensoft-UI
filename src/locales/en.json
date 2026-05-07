@@ -145,7 +145,7 @@
     "toastRequestError": "Could not reach the server. Please try again.",
     "toastNetworkError": "A network error occurred. Please try again.",
     "validation": {
-      "summary": "Please fix the highlighted fields and add at least 3 files.",
+      "summary": "Please check the highlighted fields.",
       "fullName": "Please enter name and surname.",
       "fullNameMeaningful": "Please enter a real and meaningful full name.",
       "emailMeaningful": "Please enter a real email address.",

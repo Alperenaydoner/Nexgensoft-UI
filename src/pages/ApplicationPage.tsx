@@ -252,7 +252,7 @@ export function ApplicationPage() {
     const coverLetter = editCoverLetter.trim()
 
     const nextErrors = validateFields(fullName, email, editPosition, coverLetter, editFiles, {
-      requireMinFileCount: true,
+      requireMinFileCount: false,
     })
     if (!applicationCode) {
       nextErrors.applicationCode = t('contact.validation.required')

@@ -145,7 +145,7 @@
     "toastRequestError": "Sunucuya erişilemedi. Lütfen tekrar deneyin.",
     "toastNetworkError": "Ağ hatası oluştu. Lütfen tekrar deneyin.",
     "validation": {
-      "summary": "Lütfen işaretli alanları doldurun ve en az 3 dosya ekleyin.",
+      "summary": "Lütfen işaretli alanları kontrol edin.",
       "fullName": "Ad ve soyad girin.",
       "fullNameMeaningful": "Lütfen gerçek ve anlamlı bir ad soyad girin.",
       "emailMeaningful": "Lütfen gerçek bir e-posta adresi girin.",
